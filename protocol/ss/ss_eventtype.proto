@@ -1,0 +1,48 @@
+syntax = "proto3";
+option go_package = "gamekit/pkg/ss;ss";
+package ss;
+
+message EvnActivity {
+    // 活动Id
+    uint32 ActId = 1;
+    // 开始时间
+    int64 StartTm = 2;
+    // 结束时间
+    int64 EndTm = 3;
+}
+
+message EvnParam {
+    EvnActivity Activity = 1;
+}
+
+enum EventType {
+    // 创角事件
+    EId_Create         			= 0;
+    // 玩家登陆
+    EId_Login          			= 1;
+    // 玩家登出
+    EId_Logout         			= 18;
+    // 服务停止
+    EId_StopService    			= 19;
+    // 人为制造延时
+    EId_Latency        			= 20;
+    // 业务服务器连接
+    EId_ServerReady_GlobalSvr   = 21;
+    EId_ServerReady_GameSvr    	= 22;
+    // 玩家离线数据处理完成
+    EId_OfflineDataOver         = 23;
+    // 活动开启
+    EId_ActiStart				= 24;
+    // 活动结束
+    EId_ActiEnd					= 25;
+    // 跨天
+    EId_CrossDay                = 26;
+    //滚服更新。
+    EId_RollServerUpdate    	= 36;
+    //通知在线玩家断线重连
+    EId_OnlinePlayerReconnect   = 37;
+    // 执行ctrl命令
+    EId_CtrlCommand             = 42;
+    // 玩家登入成功（LoginSuccess完成后抛出，数据已全部准备就绪）
+    EId_LoginSuccess = 48;
+}

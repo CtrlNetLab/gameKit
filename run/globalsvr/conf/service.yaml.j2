@@ -1,0 +1,60 @@
+Network:
+    ServerService: "0.0.0.0:{{ dist_user.Roles.globalsvr.Port | default(Roles.globalsvr.Port, true) }}"
+
+Control:
+    # 用于监听 UDP 控制指令, 这个端口只能通过防火墙指定 ip 来访问
+    Service: "127.0.0.1:{{ dist_user.Roles.globalsvr.CtrlPort | default(Roles.globalsvr.CtrlPort, true) }}"
+    # 加密密钥
+    ScrtKey: "9WepkO@WlcYex&wW"
+
+MySQL:
+    GlobalData:
+        HostList: {{ MySQL.GlobalData.HostList or MySQL.HostList }}
+        DBName: "{{ MySQL.GlobalData.DBName }}"
+        SplitNum: 64
+        TablePrefix: "DBGlobalData_"
+        Port: {{ MySQL.GlobalData.Port or MySQL.Port }}
+        User: "{{ MySQL.GlobalData.User or MySQL.User }}"
+        Passwd: "{{ MySQL.GlobalData.Passwd or MySQL.Passwd }}"
+        CharSet: "utf8"
+        Debug: {{ MySQL.GormDebug }}
+        DBMaxIdleConns: 10
+        MaxOpenConns: 64
+        ConnMaxLifetime: 3600
+
+Redis:
+    # 在线 redis
+    Online:
+        AddrList: {{ Redis.Online.AddrList or Redis.AddrList }}
+        Passwd: "{{ Redis.Online.Passwd or Redis.Passwd }}"
+        DB: {{ Redis.Online.DB if Redis.Online.DB is integer else Redis.DB }}
+        MinIdleConns: 10
+        # 提前加载脚本
+        Scripts:
+            onlineCheck: "../../redislua/checkOnline.lua"
+            offline: "../../redislua/offline.lua"
+            saveToken: "../../redislua/saveToken.lua"
+
+RedisKey:
+    OnlineKey: "{{ RedisKey.OnlineKey }}"
+
+Common:
+    GameId: {{ Common.GameId }}
+    EnvName: {{ Common.EnvName }}
+    # 服务 id, 同一类型的服务 id 不能一样, 否则启动会失败
+    ServiceId: {{ dist_user.Roles.globalsvr.ServiceId | default(Roles.globalsvr.ServiceId, true) }}
+    # 服务正式上线的时间
+    StartService: "2023-01-01"
+    NetLog: {{ Common.NetLog }}
+    # 数据库查询每次选取数量
+    SelectCount: 1000
+    # 数据库查询线程数
+    ThreadCount: 4
+    # 数据库查询分页数量
+    PageCount: 100
+    # 在线 key
+    OnlineKey: "{{ RedisKey.OnlineKey }}"
+    # 数据库回写时间
+    DBUpdateTime: 60s
+    # 好友模块是否开启跨服
+    FriendCrossFlag: false

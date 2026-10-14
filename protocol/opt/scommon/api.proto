@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+
+import "google/protobuf/any.proto";
+import "scommon/global.proto" ;
+
+
+/** API Id */
+enum APIId {
+  NO_API_ID = 0;
+  SERVER_ENV_QUERY = 50 ; //服务器环境变量查询
+  REPORT_HEALTHY = 60 ; //服务器健康信息上报
+  CONFIG_QUERY = 100 ; //查询配置文件
+  USE_EXCHANGE_CODE = 200 ;//使用兑换码
+  FALL_BACK_EXCHANGE_CODE = 201 ; //回退兑换码——比如当游戏侧校验玩家群组不通过，则通知运营平台回退
+  BAN_PLAYER_REQUEST = 210 ; //封号请求
+  ADD_SHARE_KEY = 220 ; //添加分享码
+}
+
+//服务器环境变量查询 SERVER_ENV_QUERY = 50
+message APIServerEnvQuery {
+  message Req {
+    string server = 1 ;//服务器标识
+  }
+  message Resp {
+    string evnConf = 1 ;//环境变量
+  }
+}
+
+// REPORT_HEALTHY = 60 ; //服务器健康信息上报
+message APIReportHealthy {
+  message Req {
+    string serverId = 1 ; //上报的服务器ID
+    string checkId = 2 ;//检查ID
+  }
+  message Resp {
+  }
+}
+
+//查询配置文件 API_CONFIG_QUERY = 100
+message APIConfigQuery {
+  message Req {
+    BusinessMod businessMod  = 1 ; //要查询的业务模块
+    string serverId = 2 ;//服务ID
+  }
+  message Resp {
+    google.protobuf.Any data = 2 ;//返回的数据
+  }
+}
+
+//使用兑换码 USE_EXCHANGE_CODE = 200
+message APIUseExchangeCode {
+  message Req {
+    string code = 1 ; //兑换码
+    string playerId = 2 ;//玩家id
+  }
+  message Resp {
+    int32 playerGroupId = 1 ;//这个兑换码属于哪个玩家群组的，需要游戏服务端自行判断下
+    repeated Award rewardList = 2 ;//奖励列表
+    int32 activityId = 3 ; //活动id
+    PlayerGroupCond playerGroupCond = 4 ; //玩家群组条件(20250911更新,支持多个群组)
+    string tradeNo = 5 ; //交易号
+    bool playerGroupExclude = 6 ; //是否排除该群组
+  }
+}
+
+//回退兑换码，比如当游戏测校验玩家群组后发现不通过，则回退 FALL_BACK_EXCHANGE_CODE = 201
+message APIFallBackExchangeCode {
+  message Req {
+    string code = 1 ;  //兑换码
+    string playerId = 2 ;//玩家id
+    string tradeNo = 5 ; //交易号
+  }
+  message Resp {
+  }
+}
+
+
+// 封号请求  BAN_PLAYER_REQUEST = 210 ; //封号请求
+message APIBanPlayerRequest {
+  message Req {
+    string playerId = 1 ;  //玩家ID
+    string nickName = 2 ; //昵称
+    string reason = 3 ; //封号原因
+  }
+  message Resp {
+  }
+}
+
+// ADD_SHARE_KEY = 220 ; //添加分享码
+message APIAddShareKey {
+  message Req {
+    string shareKey = 1; //分享码
+  }
+  message Resp {
+  }
+}
+
+

@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+import "scommon/global.proto";
+
+
+//推送礼包
+message PushGift {
+  int32 id = 1 ;
+  string name = 2;  //推送名
+  OuterCallType outerCallType = 3 ;//外部调用类型（请求来源： 客户端、数数）
+  int32 pushType = 5 ;//推送类型
+  optscommon.TimeRange validTime = 10 ; //有效时间
+  int32 checkPriority = 20 ;//检测优先级
+  CheckFrequencyType checkFrequencyType = 21 ; //检测频率类型（推送频率）
+  int32 checkCdMin = 22 ; //检测cd分钟
+  int32 showViewType = 23 ; //展示界面类型
+  int32 checkCount = 24 ; //检测次数
+  int32 checkCdMinAgain = 25 ; //再次检测cd分钟
+  int32 heroId = 26 ; //英雄ID
+  int32 maxStar = 27 ; //满星星级
+
+
+
+  int32 operateType = 30 ;//操作类型(操作ID)
+  int32 showMin = 31 ;//展示时长（分钟）
+  int32 showPriority = 32 ;//展示优先级
+
+
+  string triggerId = 35 ; //触发ID
+  int32 triggerCount = 36 ; //触发次数
+
+  PlayerGroupCond playerGroupCond = 39 ; //玩家群组条件(20250911更新,支持多个群组)
+  int32 playerGroupId = 40 ;//玩家群组Id
+  bool playerGroupExclude = 41 ; //是否排除该群组
+  int32 operateVal = 50 ; //操作值
+  string operateStrVal = 51 ; //操作值字符串
+  repeated int32 refGiftIds = 45 ; //关联礼包
+
+  UIShowType uiShowType = 60;//UI展示类型
+  bool popupDialog = 61 ;//是否弹窗
+  MilestoneConfig milestoneConfig = 62 ;// 里程碑数据
+}
+
+/** 里程碑配置 */
+message MilestoneConfig {
+  int32 activityId = 1 ; //活动ID
+  int32 type = 2 ;//里程碑类型
+  int32 afterOperateScore = 3; //操作后分数
+}
+
+enum UIShowType {
+  UI_SHOW_TYPE_NONE = 0 ;
+  UI_SHOW_TYPE_VERTICAL = 1 ; //竖直流式
+  UI_SHOW_TYPE_TURN_ROUND = 2 ; //S型拐弯
+  UI_SHOW_TYPE_UN_LIMIT = 3 ; //无限流
+}
+
+//外部调用类型
+enum OuterCallType {
+  NO_OUTER_CALL_TYPE = 0 ;
+  SHU_SHU = 1; //数数运营模块
+}
+
+//检测频率类型
+enum CheckFrequencyType {
+  NO_CHECK_FREQUENCY_TYPE = 0 ;
+  CF_PER_OPERATE = 1 ; //每次操作
+  CF_PER_DAY = 2 ; //每自然日
+  CF_PER_WEEK = 3 ; //每自然周
+  CF_PER_MONTH = 4 ; //每自然月
+  CF_LIFT_LONG = 5 ;//终生
+}

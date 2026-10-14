@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/database;database";
+package database;
+
+// 账号基础数据(DBAccData 表结构, 由 tools/db 生成 db_acc_data.pb.go)
+message AccData {
+    // hash
+    uint64 Hash     = 1;
+    // 用户id
+    string UserId  = 2;
+    // 平台类型
+    int32  LoginType = 3;
+    // accid
+    uint64  AccId = 4;
+    // 创建时间
+    int64 CreateAt   = 5;
+    // 是否注销
+    int32 IsDel = 6;
+    // 注销冷静期结束时间
+    int64 Expire = 7;
+    int64 UpdateAt = 8;
+}

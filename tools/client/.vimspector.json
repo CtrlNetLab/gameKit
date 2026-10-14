@@ -1,0 +1,13 @@
+{
+  "configurations": {
+    "run": {
+      "adapter": "vscode-go",
+      "filetypes": [ "go" ], 
+      "configuration": {
+        "request": "launch",
+        "program": "${workspaceFolder}/scripts/main.go",
+        "mode": "debug"
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/database;database";
+
+import "database/ac_account.proto";
+
+package database;
+
+message RoomData {
+    // @see EnmGameState
+    uint32 GameState = 1;
+    // GameState 时间戳
+    int64 GameStateTime = 2;
+    //房间唯一ID,用于房间登录
+    uint64 RoomId = 4;
+    //房间连接ID
+    uint64 RoomConnIdx = 5;
+    uint32 RoomType = 6;
+}
+
+//玩家身上基础数据
+message PlayerBase {
+    //玩家操作状态，@seeEnmOperState
+    uint32 OperState = 1;
+    // 总的在线时长
+    int64 TotalOnTm = 5;
+
+    int64 LoginUpdateTime = 7;
+
+    // 房间数据(示例: 嵌套结构体字段, 业务可扩展)
+    RoomData CurrentRoom = 10;
+}
+
+//玩家需要存数据库的数据
+message PlayerData {
+    //账号ID
+    uint64 AccId = 1;
+    //角色名字
+    string Name = 2;
+
+    //Gm权限类型
+    int32 GmType = 3;
+    // 是否处于删除状态, 0: 正常; 1: 删除
+    int32 Delete = 4;
+    // 绑定第三方账号数据, 0: 没有绑定; 按位与 |
+    int64 BindType = 5;
+    //当前等级
+    uint32 Level = 6;
+    //当前经验
+    uint32 Exp = 7;
+    //封禁类型
+    int32 ForbidType = 8;
+    //封禁到期时间
+    int64 ForbidTime = 9;
+
+    //玩家上次登陆时间
+    int64 LastLoginTime = 11;
+
+    int64 UpdateAt = 12;
+    int64 CreateAt = 13;
+
+    //玩家身上 blob 数据
+    PlayerBase PlayerBase = 14;
+    Account Account = 15;
+}

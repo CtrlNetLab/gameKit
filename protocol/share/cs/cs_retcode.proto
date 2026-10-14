@@ -1,0 +1,661 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+enum EnmRetCode {
+    // 成功 
+    SUCCESS = 0;
+
+    // redis 错误 
+    LOGIN_REDIS   = 1;
+
+    // mysql 错误 
+    LOGIN_MYSQL   = 2;
+
+    // 数据库解析错误 
+    LOGIN_PB_PARSE = 3;
+
+    // PB 打包错误 
+    LOGIN_PB_PACK = 4;
+
+    // 登陆状态不正确 
+    LOGIN_LOGIN_STATE = 6;
+
+    // 服务器在维护中
+    SERVER_IN_MAINTENANCE = 7;
+
+    // 登录认证失败
+    LOGIN_AUTH_PRE_HTTP = 9;
+    // 账号认证失败 
+    LOGIN_AUTH_ACCOUNT = 10;
+
+    // 重复登录被踢下线 
+    KICKOFF_DUPLICATE = 20;
+    //作弊被踢下线
+    KICKOFF_CHEAT = 21;
+
+    // 参数非法 
+    ARG_INVALID = 32;
+
+    // 请输入昵称
+    ENTER_NAME = 79;
+    // 该昵称已被注册
+    REPET_REGISTER_NAME = 80;
+    // 当前昵称不可使用
+    CAN_NOT_USE_THIS_NAME = 81;
+    
+    // 需要登录支付账号 
+    PAY_NEED_LOGIN = 82;
+
+    // 没有可收取的邮件 
+    MAIL_NO_MORE_NEW = 125;
+    // 该邮件已收取 
+    MAIL_ALREADY_GOT = 126;
+    // 没有可删除邮件 
+    MAIL_NO_MORE_DELETE = 127;
+    // 无操作权限
+    NOT_ALLOWED = 128;
+    // 玩家还没有角色，需要创角
+    LOGIN_CREATE_ROLE = 129;
+
+    /// 游戏服务器错误码从 6000 - 7999 ！！！
+    /// 游戏服务器错误码从 6000 - 7999 ！！！
+    /// 游戏服务器错误码从 6000 - 7999 ！！！
+
+    // 玩家下线 
+    PLAYER_OFFLINE = 6001;
+    // 配置没找到
+    CFG_NOT_FOUND = 6002;
+    // 服务器内部消息通信错误 
+    RELAY_SEND_FAILED = 6017;
+    // 邮件已经过期
+    ERR_MAIL_EXPIRE = 6056;
+    // 玩家不存在
+    ERR_NOT_FIND_ROLE = 6059;
+    // 好友已达到上限
+    ERR_FRIEND_NUM_REACH_MAX = 6060;
+    // 好友关系已经解除
+    ERR_FRIEND_RELATIONSHIP_DISSOLVED = 6095;
+    // 好友已经离线
+    ERR_FRIEND_IS_OFFLINE = 6096;
+    // 账号已被封禁
+    ERR_FORBID_ACCOUNT = 6123;
+    // ip已被封禁
+    ERR_FORBID_IP = 6124;
+    // 当前ip登录人数已达上限
+    ERR_LOGIN_IP_ADDR_REACH_MAX = 6128;
+    // 游戏当前时段没开放
+    ERR_GAME_NOT_OPEN = 6131;
+
+    // 功能未开放
+    ERR_NOT_OPEN = 6141;
+    // 配置参数错误
+    ERR_CFG_ERROR= 6168;
+    // 内部错误
+    ERR_INTERNAL_ERROR = 6180;
+
+	// 没有参与匹配，但却发起了退出 
+    MATCH_EXIT_NOT_FOUND = 6500;
+    // 没有找到玩家所在副本 
+    ROOM_NOT_FOUND = 6501;
+
+    // 没找到 roomsvr
+    MATCH_ROOMSERVICE = 6502;
+    // 匹配阶段不能操作
+    MATCH_CANT_OPER = 6503;
+    // 房间不存在 
+    MATCH_ROOMNO_INVALID = 6504;
+    // 房间已满 
+    MATCH_ROOM_FULL = 6505;
+    // 不能进入多个房间 
+    ROOM_MULTI_JOIN = 6506;
+    // 有玩家没有准备好 
+    ROOM_NOT_START_READY = 6507;
+    // 创建房间失败 
+    ROOM_CREATE_FAILED = 6508;
+    // 还没匹配成功
+    ROOM_MATCH_STATE = 6509;
+    // 已经创建了房间却发起了退出匹配
+    MATCH_CANCEL_WITH_ROOM_CREATED = 6510;
+
+    //其他账号已经绑定过该平台
+    ERROR_PLATFORM_WAS_BIND = 6601;
+    //账号已注销
+    ERROR_ACCOUNT_UNSUBSCRIBE = 6602;
+    //账号被封禁
+    ERROR_ACCOUNT_BANNED= 6603;
+    //player be empty or player is not online
+    ERROR_PLAYER_BE_EMPTY_OR_OFFLINE= 6666;
+
+
+    // 协议调用入口异常(IllegalAccessException)
+    ERROR_PROTOCOL_INVOKE_ILLEGAL = 2001;
+    // 协议调用入口异常(IllegalArgumentException)
+    ERROR_PROTOCOL_INVOKE_ARGUMENT = 2002;
+    // 协议调用入口异常(InvocationTargetException)
+    ERROR_PROTOCOL_INVOKE_INVOCATION = 2003;
+    // 账户未登录
+    ERROR_ACCOUNT_NO_LOGIN = 2004;
+    // 账号不存在
+    ERROR_ACCOUNT_NO_EXIST = 2005;
+    // 有效，但解析得到的cliUsrId与用户的cliUsrId不匹配
+    ERROR_A = 99987;
+    // 有效，但解析得到的cliUsrId与用户的cliUsrId不匹配
+    TOKEN_IS_VALID_CLIUSRID_INCONSISTENCY = 99988;
+    // 调用第三方平台失败
+    THIRD_PLATFORM_VERIFY_REQUEST_ERROR = 99989;
+    // 账号已存在且平台信息也存在，但平台id不匹配
+    ACCOUNT_EXISTED_PLATFORM_ID_INCONSISTENCY = 99990;
+    // 账号已存在，但账号中的平台信息为空
+    ACCOUNT_EXISTED_PLATFORM_IS_NULL = 99991;
+    // 无效的平台登录类型
+    PLATFORM_LOGIN_TYPE_ERROR = 99992;
+    // 备份数据为空
+    BACK_UP_DATA_IS_EMPTY = 99993;
+    // 数据库操作异常(通用)
+    ERROR_DATABASE = 99994;
+    // 第三方能成功调用,但因响应失败
+    THIRD_PLATFORM_VERIFY_RESPONSE_ERROR = 99995;
+    // 第三方平台登录失败
+    PLATFORM_LOGIN_ERROR = 99996;
+    // 错误GM指令
+    ERROR_GM_CMD = 99997;
+    // 服务器未知错误...
+    ERROR_UNKNOWN = 99999;
+    // proto.Marshal 错误
+    ERROR_MARSHAL_PB = 99986;
+    // proto.Unmarshal 错误
+    ERROR_UNMARSHAL_PB = 99985;
+    // 请求参数异常
+    ERROR_REQUEST_PARAM = 90000;
+    // 协议未定义
+    ERROR_PROTOCOL_NO_FOUND = 90001;
+    // 配置数据未定义
+    ERROR_CONFIG_NOT_FOUND = 90002;
+    // 协议初始化异常
+    ERROR_PROTOCOL_INIT = 90003;
+    // 基本参数配置表不存在
+    ERROR_ARGS_CONFIG_NOT_EXIST = 90006;
+    // 配置表异常(通用)
+    ERROR_CONFIG_DATA = 90007;
+    // 配置表异常(通用)
+    ERROR_CONFIG_PARAM = 90008;
+    // 配置Id格式有误，应为7位数及以上的格式(通用)
+    ERROR_CONFIG_ID_EXCEPTION = 90009;
+    // 方法调用的传参异常(通用)
+    ERROR_TRANSFER_PARAM = 90011;
+    // token错误
+    ERROR_TOKEN = 90012;
+    // 用户UUID为空
+    ERROR_ACCOUNT_UUID_ISEMPTY = 90013;
+    // 空指针
+    NULL_POINTER_EXCEPTION = 90014;
+    // 错误函数行参
+    ERROR_FUNCTION_PARAMETER = 90015;
+    // 用户数据错误
+    ERROR_ACCOUNT_DATA = 90016;
+    // 存在异常敏感字
+    ERROR_SENSITIVE_WORD = 90017;
+    // 函数执行所需的前置数据不足(通用)
+    ERROR_REQUIRED_DATA_INSUFFICIENT = 90018;
+    // 运营平台的配置异常(通用)
+    ERROR_OPT_CONFIG_DATA = 90019;
+    // 账户创建失败
+    ERROR_ACCOUNT_CREATE_FAILURE = 10001;
+    // 英雄不存在
+    ERROR_HERO_NO_EXIST = 10006;
+    // 条件不满足(通用)
+    ERROR_NOT_SATISFIED = 10008;
+    // 英雄已拥有
+    ERROR_HERO_IS_EXIST = 10009;
+    // 角色不存在
+    ERROR_ROLE_NO_EXIST = 10010;
+    // 改的角色名已存在
+    ERROR_ROLE_NAME_IS_EXIST = 10011;
+    // 抽奖配置不存在
+    ERROR_LOTTERY_CONFIG_NOT_EXIST = 10101;
+    // 日常累抽奖励条件不满足
+    ERROR_LOTTERY_AGGREGATE = 10104;
+    // 日常累抽奖励已经领取
+    ERROR_RECEIVED = 10105;
+    // 角色卡池数据初始化异常
+    ERROR_LOTTERY_CARD_INIT = 10106;
+    // 抽卡消耗配置表不存在
+    ERROR_LOTTERY_CONSUME = 10107;
+    // 每日在线奖励已经领取
+    ERROR_ONLINE_RECEIVED = 10108;
+    // 未满在线时长，无法领取
+    ERROR_NOT_ARRIVE_ONLINE_TIME = 10109;
+    // 英雄格子不足
+    ERROR_HERO_BAG_NUM_NO_ENOUGH = 10110;
+    // 关卡未解锁
+    ERROR_MAP_STAGE_LOCK = 10200;
+    // PVE关卡不存在
+    ERROR_MAP_STAGE_NO_EXIST = 10202;
+    // PVE星球地图不存在
+    ERROR_MAP_NO_EXIST = 10203;
+    // PVE累计星数奖励领取异常
+    ERROR_MAP_STAGE_AGGREGATE = 10204;
+    // PVE关卡累计星数奖励配置不存在
+    ERROR_MAP_STAGE_AGGREGATE_CONFIG_NO_EXIST = 10205;
+    // 不满足领取条件
+    ERROR_MAP_STAGE_AGGREGATE_NO_ENOUGH = 10206;
+    // 挑战关卡前尚未布阵
+    ERROR_MAP_STAGE_NO_ARRAY = 10207;
+    // 关卡布阵异常
+    ERROR_MAP_STAGE_ARRAY = 10208;
+    // 地图障碍物已清除
+    ERROR_MAP_EVENT_IS_CLEARED = 10209;
+    // 更新地图全局状态错误
+    ERROR_UPDATE_GLOBAL_MAP = 10210;
+    // PVE关卡未通关
+    ERROR_MAP_STAGE_NOT_CLEARING = 10211;
+    // 错误道具类型
+    ERROR_ITEM_TYPE = 10300;
+    // 道具不足（全局通用）
+    ERROR_ITEM_NO_ENOUGH = 10301;
+    // 错误货币类型
+    ERROR_CURRENCY_TYPE = 10302;
+    // 货币不足（全局通用）
+    ERROR_CURRENCY_NO_ENOUGH = 10303;
+    // 宝箱配置不存在
+    ERROR_BOX_CONFIG_NO_EXIST = 10304;
+    // 资源类型不存在（全局大类）
+    ERROR_RESOURCE_TYPE = 10305;
+    // 英雄不存在
+    ERROR_HERO_NULL = 10400;
+    // 升星失败，已达最高上限
+    ERROR_STAR_UP = 10401;
+    // 升星失败，请先升级英雄等级
+    ERROR_STAR = 10402;
+    // 升级失败，已达星级最高等级上限，可升星后再升级
+    ERROR_LEVEL_UP = 10403;
+    // 创角失败
+    ERROR_CREATE_ROLE = 10404;
+    // 合成失败，碎片不存在
+    ERROR_MERGE_HERO = 10406;
+    // 合成失败，英雄碎片不足
+    ERROR_MERGE_HERO_NOT_ENOUGH = 10407;
+    // 合成失败，英雄格子数不足
+    ERROR_HERO_BAG_NOT_ENOUGH = 10408;
+    // 合成失败，超出最大合成限制
+    ERROR_EXCEED_MAXIMUM_NUMBER = 10409;
+    // 英雄处于锁定状态，无法作为升星材料或者分解
+    ERROR_HERO_IS_LOCKED = 10410;
+    // 商品库存不足
+    ERROR_STORE_NOT_STOCK = 10500;
+    // 未购买上一阶段礼包
+    ERROR_NOT_UP_GIFTBAG = 10503;
+    // 刷新宝箱异常
+    ERROR_STORE_REFRESH = 10504;
+    // 未满足购买条件
+    ERROR_NOT_MET_CONDITION = 10505;
+    // 手动刷新次数上限
+    ERROR_REFRESH_LIMIT = 10506;
+    // 不在活动期间无法领取积分
+    ERROR_NOT_RANGE_POINT = 10507;
+    // 不可重复领取
+    ERROR_IS_RECEIVED = 10508;
+    // 获取任务配置异常或不存在
+    ERROR_TASK_CONFIG_NO_EXIST = 10509;
+    // 任务奖励已领取
+    ERROR_TASK_RECEIVED = 10510;
+    // 任务尚未完成
+    ERROR_TASK_NO_FINISH = 10511;
+    // 任务类型参数不存在
+    ERROR_TASK_TYPE_NO_EXIST = 10512;
+    // 邮件未找到
+    ERROR_MAIL_NOTFOUND = 10600;
+    // 奖励未领取
+    ERROR_REWARD_NOT_RECEIVED = 10602;
+    // 奖励已领取
+    ERROR_REWARD_RECEIVED = 10603;
+    // 不存在
+    IM_CHANNEL_NO_EXIST = 10700;
+    // 聊天内容过滤错误
+    IM_MSG_FILTER = 10701;
+    // 不存在
+    STAGES_CLOSE = 10800;
+    // 副本关卡不存在
+    STAGES_LEVEL_CLOSE = 10801;
+    // 保存关卡异常
+    STAGES_SAVE_ERROR = 10802;
+    // 关卡已完成,请勿重复提交
+    STAGES_IS_OVER = 10803;
+    // 已无法承受更多的祝福
+    BUFF_IS_OVER = 10804;
+    // 用户数据异常，未上榜
+    ERROR_PVP_REDIS_RANKING = 10900;
+    // 竞技场挑战门票已用完
+    PVP_CHALLENGE_TICKET_EMPTY = 10901;
+    // 玩家不存在
+    PVP_PLAY_NULL = 10902;
+    // 奖励领取异常
+    RECEIVE_AWARD_ERROR = 10903;
+    // 已领取连胜奖励
+    PVP_WIN_AWARD_RECEIVED = 10904;
+    // 秘境未开启
+    ERROR_SECRET_NOT_OPEN = 11100;
+    // 秘境挑战次数不足
+    ERROR_SECRET_COUNT_NOT_ENOUGH = 11101;
+    // 商店商品不存在
+    ERROR_SHOP_GOODS_NOT_EXIST = 11200;
+    // 调用订单服失败
+    ERROR_INVOKE_PAY = 11201;
+    // 订单不存在
+    ERROR_ORDER_NOT_EXIST = 11202;
+    // 订单已完成
+    ERROR_ORDER_FINISH = 11203;
+    // 非法订单不
+    ERROR_ORDER_INVALID = 11204;
+    // 非法订单拥有者
+    ERROR_ORDER_OWNER_INVALID = 11205;
+    // 验单需要重试
+    VARIFY_NEED_RETRY = 11206;
+    // 爬塔副本快速挂机使用次数达到上限
+    TOWER_QUICK_HANG_UPPER_LIMIT = 11300;
+    // 挂机时间太短,无法领取挂机奖励
+    TOWER_HANG_FAILED = 11301;
+    // 爬塔副本已达到最高层
+    TOWER_CHALLENGE_UPPER_LIMIT = 11302;
+    // 当前层尚未通关
+    TOWER_RANK_FLOOR_NOT_EXIST = 11303;
+    // 当前层未解锁
+    TOWER_FLOOR_LOCK = 11304;
+    // 爬塔排行榜redis错误
+    TOWER_RANK_REDIS_ERROR = 11305;
+    // 模块未解锁
+    MODULE_NOT_UNLOCKED = 11400;
+    // 对方申请列表已满
+    HIS_APPLY_IS_FULL = 11500;
+    // 你的好友列表已满
+    YOUR_FRIEND_ME_FULL = 11501;
+    // 未收到好友申请
+    NOT_FRIEND_REQUEST = 11502;
+    // 异常操作，不存在该好友
+    NOT_FRIEND = 11503;
+    // 已存在该好友
+    EXISTS_FRIEND = 11504;
+    // 对方好友列表已满
+    HIS_FRIEND_IS_FULL = 11505;
+    // 好友申请已发送
+    FRIEND_APPLYED  = 11506;
+    // 参数异常，奖励不存在
+    FRIEND_RECEIVE_GIFT_ERROR = 11507;
+    // 今日领取次数已用完
+    FRIEND_RECEIVE_GIFT_FULL = 11508;
+    // 奖励已过期
+    FRIEND_RECEIVE_GIFT_EXPIRE = 11509;
+    // 奖励已领取
+    FRIEND_RECEIVE_GIFT_ALREADY = 11510;
+    // 已过有效期
+    FRIEND_NO_GIFT = 11511;
+    // 已领取过签到奖励
+    SIGN_IN_AWARD_RECEIVED = 11600;
+    // 今天不满足签到条件
+    SIGN_IN_DO_NOT_MEET = 11601;
+    // 签到数据已初始化
+    SIGN_IN_ALREADY_INITIALIZED = 11602;
+    // 传入的时间无法找到首次签到的数据
+    SIGN_IN_FIRST_NOT_FOUND = 11603;
+    // 传入的时间无法找到月份签到的数据
+    SIGN_IN_MONTH_NOT_FOUND = 11604;
+    // 传入的时间无法找到签到数据(通用)
+    SIGN_IN_COMMON_NOT_FOUND = 11605;
+    // 传入的时间不在有效范围
+    SIGN_IN_PARAMS_NOT_IN_EFFECTIVE_RANGE = 11606;
+    // 获取签到奖励的月份参数异常
+    SIGN_REWARD_ERROR = 11607;
+    // 获取签到奖励配置表数据的月份参数
+    SIGN_REWARD_CONFIG_ERROR = 11608;
+    // 免费补签次数不足
+    REPAIR_SIGN_IN_NOT_ENOUGH = 11609;
+    // 战令可领奖励为空
+    STAGE_BATTLE_ACTIVITY_REWARD_EMPTY = 11700;
+    // 战令已经跨月重置
+    STAGE_BATTLE_ACTIVITY_ALREADY_RESET = 11701;
+    // 战令奖励已领取
+    BATTLE_PASS_REWARD_RECEIVED_ALREADY = 11702;
+    // 付费战令未激活
+    PAY_BATTLE_PASS_NOT_ACTIVATED = 11703;
+    // 饰品已达最高等级
+    EQUIP_ALREADY_IS_MAXLEVEL = 11800;
+    // 饰品已穿戴
+    EQUIP_ALREADY_UP = 11801;
+    // 饰品未穿戴
+    EQUIP_ALREADY_IS_DOWN = 11802;
+    // 已达饰品最高星级
+    EQUIP_ALREADY_IS_STAR_UP = 11803;
+    // 合成失败，未满足合成条件
+    EQUIP_MERGE_ERROR = 11804;
+    // JWT工具解析失败
+    SINGLE_SIGN_JWT_PARSE_FAILED = 11900;
+    // 无效token
+    SINGLE_SIGN_INVALID_TOKEN = 11901;
+    // 不同设备登录
+    SINGLE_SIGN_DEVICE_EXCEPTION = 11902;
+    // 账号uuid与token不一致
+    SINGLE_SIGN_ACCOUNT_ID_EXCEPTION = 11903;
+    // 派遣任务不存在
+    DISPATCH_ERROR_TASK_NOT_EXIST = 12000;
+    // 派遣任务已经处于派遣状态
+    DISPATCH_ERROR_TASK_ALREADY_START = 12001;
+    // 需要派遣的英雄状态为已派遣
+    DISPATCH_ERROR_HERO_ALREADY_SENT = 12002;
+    // 派遣任务奖励已领取
+    DISPATCH_ERROR_REWARD_ALREADY_SENT = 12003;
+    // 派遣任务配置不存在
+    DISPATCH_ERROR_TASK_CONFIG_NOT_EXIST = 12004;
+    // 派遣任务尚未完成
+    DISPATCH_ERROR_TASK_NOT_COMPLETE = 12005;
+    // 派遣英雄数量超出限制
+    DISPATCH_ERROR_DISPATCH_HERO_NUM_OVER = 12006;
+    // 派遣英雄星级条件不满足
+    DISPATCH_ERROR_DISPATCH_HERO_NOT_MATCH_STAR = 12007;
+    // 派遣英雄颜色条件不满足
+    DISPATCH_ERROR_DISPATCH_HERO_NOT_MATCH_COLOR = 12008;
+    // 派遣英雄阵营条件不满足
+    DISPATCH_ERROR_DISPATCH_HERO_NOT_MATCH_CAMP = 12009;
+    // 派遣英雄数量不满足最小限制
+    DISPATCH_ERROR_DISPATCH_HERO_NUM_NOT_FULL = 12010;
+    // 流星宝箱今日观看广告次数已用尽
+    METEOR_TODAY_AD_MAX_LIMIT = 12100;
+    // 流星宝箱不存在
+    METEOR_BOX_NOT_EXIST = 12101;
+    // 需领取的宝箱还未到开箱时刻
+    METEOR_BOX_NOT_OPEN = 12102;
+    // 流星宝箱兑换列表已满
+    METEOR_BOX_ARRAY_IS_FULL = 12103;
+    // 流星宝箱存在尚在解锁的宝箱
+    METEOR_BOX_HAVE_IN_UNLOCK = 12104;
+    // 流星宝箱已完成解锁
+    METEOR_BOX_WAS_UNLOCKED = 12105;
+    // 好友已经送过礼物
+    FRIEND_GIFTED = 12106;
+    // 所有好友都已送过礼物，暂无好友可送礼
+    FRIEND_ALL_GIFTED = 12107;
+    // 暂无好友可送礼
+    NO_FRIEND_TO_GIFTE = 12108;
+    // 服务器维护踢人
+    KICKOFF_FOR_MAINTAIN = 12109;
+    /**
+        广告视频次数不足
+      */
+    AD_VIDEO_NOT_ENOUGH = 12110;
+
+    /**
+  活动错误码
+**/
+    //未开启
+    ACTIVITY_NOT_OPEN  = 12200;
+    //已领取过奖励
+    ACTIVITY_REWARD_RECEIVED  = 12201;
+    //未达到条件
+    ACTIVITY_NOT_CONDITION  = 12202;
+    //活动已结束
+    ACTIVITY_END  = 12203;
+    //新pvp错误码
+    //PVP阵容不能绑定临时英雄或npc
+    ERROR_PVP_ARRAY_CAN_NOT_BIND_TEMPLATE_HERO = 12300;
+    //PVP每日挑战奖励已领取
+    ERROR_PVP_DAILY_REWARD_ALREADY_RECEIVED = 12301;
+    //PVP段位奖励已领取
+    ERROR_PVP_DIVISION_REWARD_ALREADY_RECEIVED = 12302;
+    
+	  //赠送好友礼物的次数上限
+	  ERROR_FRIEND_GIVE_GIFT_FULL = 12303;
+	  //未满足好友礼物的最终大奖领取条件
+	  ERROR_ULTIMATE_REWARD_FAIL = 12304;
+	  //好友礼物的最终大奖已领取
+	  ERROR_ULTIMATE_REWARD_RECEIVED = 12305;
+    //你的好友已被其他人送满礼物了，你没法送了。
+	  ERROR_FULL_NUMBER_OF_FRIEND_GIFTS = 12306;
+
+    //PVP段位奖励未达到领取标准
+    ERROR_PVP_DIVISION_REWARD_STANDARD_NOT_REACH = 12307;
+    //PVP每日奖励未达到领取标准
+    ERROR_PVP_DAILY_REWARD_STANDARD_NOT_REACH = 12308;
+    //PVP获取账号详细时选择对象为机器人
+    ERROR_PVP_GET_ACCOUNT_FROM_WORLD_IS_ROBOT = 12309;
+    //PVP赛季切换，请重新加载PVP数据刷新界面
+    ERROR_PVP_SEASON_CHANGE = 12310;
+    //突袭刷新次数达到上限
+    ERROR_PVP_RAID_REFRESH_COUNT_LIMIT = 12311;
+    //未找到战报数据
+    ERROR_PVP_BATTLE_REPORT_NOT_FOUND = 12312;
+    //复仇已成功,不可重复复仇
+    ERROR_PVP_REVENGE_ALREADY_SUCCESS = 12313;
+    //复仇失败,不可复仇
+    ERROR_PVP_REVENGE_ALREADY_FAIL = 12314;
+    //战斗护盾抵挡本次攻击,不可复仇
+    ERROR_PVP_REVENGE_SHIELD_BLOCK = 12315;
+    //已经嘲讽过了
+    ERROR_PVP_ALREADY_TAUNTED = 12316;
+    //不可对失败战报进行嘲讽
+    ERROR_PVP_CANT_TAUNT_LOSE_REPORT = 12317;
+    //突袭冷却中
+    ERROR_PVP_RAID_IN_CD = 12318;
+
+
+    // PVP战斗 --- start-----
+    // 没有找到请求的对象
+    NOT_FOUND_ACTOR = 12400;
+    // Actor已经死亡
+    ACTOR_WAS_DEAD = 12401;
+    // ActorID不属于自己
+    ACTOR_NOT_OWN = 12402;
+    // 没有找到技能配置
+    NOT_FOUND_SKILL_CONFIG = 12403;
+    // 技能处于CD中
+    SKILL_IN_CD = 12404;
+    // 蓝量不足
+    NOT_ENOUGH_MP = 12405;
+    // 英雄处于debuff状态无法施法(PVE)
+    HERO_IN_DEBUFF = 12406;
+    // 英雄处于debuff状态无法施法(PVP)
+    HERO_IN_DEBUFF_PVP = 12407;
+    // 大招待释放
+    ULTIMATE_SKIILL_PRE_CAST = 12408;
+    // PVP战斗 --- end-----
+
+    //跳转分享领奖
+    // 分享奖励已领取
+    JUMP_SHARE_AWARD_RECEIVED = 12500;
+
+    //运营商城礼包错误码
+    // 礼包属于不能购买类型，无法购买
+    OPT_GIFT_PACK_UNPURCHASABLE_TYPE = 12600;
+    // 礼包已达购买上限
+    OPT_GIFT_PACK_BUY_MAXIMUM_LIMIT = 12601;
+    // 礼包已达过期
+    OPT_GIFT_PACK_EXPIRED = 12602;
+    // vip礼包已购买
+    VIP_GIFT_PACK_HAVE_PURCHASED = 12603;
+    // vvip礼包已购买
+    VVIP_GIFT_PACK_HAVE_PURCHASED = 12604;
+    // 免付费支付额度购买
+    FREE_PAY_AMOUNT_BUY = 12605;
+    // 头像框不能购买
+    AVATAR_FRAME_CANNOT_BUY = 12606;
+    // 头像框已拥有
+    AVATAR_FRAME_ALREADY_OWNED = 12607;
+    // 头像框未拥有
+    AVATAR_FRAME_NOT_OWNED = 12608;
+    // 头像框未解锁
+    AVATAR_FRAME_NOT_UNLOCKED = 12609;
+    // 推送礼包已购买/领取
+    PUSH_GIFT_PACK_HAVE_PURCHASED = 12610;
+    // 头像不能购买
+    AVATAR_CANNOT_BUY = 12611;
+    // 头像已拥有
+    AVATAR_ALREADY_OWNED = 12612;
+    // 头像未拥有
+    AVATAR_NOT_OWNED = 12613;
+    // 头像未解锁
+    AVATAR_NOT_UNLOCKED = 12614;
+    // 棋子不能购买
+    CHESS_CANNOT_BUY = 12615;
+    // 棋子已拥有
+    CHESS_ALREADY_OWNED = 12616;
+    // 棋子未拥有
+    CHESS_NOT_OWNED = 12617;
+    // 棋子未解锁
+    CHESS_NOT_UNLOCKED = 12618;
+
+    // vip未开通
+    VIP_HAVE_NOT_OPENED = 12700;
+    // vip每日奖励已领取
+    VIP_AWARD_ALREADY_RECEIVED = 12701;
+    // vvip未开通
+    VVIP_HAVE_NOT_OPENED = 12705;
+    // vvip每日奖励已领取
+    VVIP_AWARD_ALREADY_RECEIVED = 12706;
+    // vip奖励领取失败
+    VIP_AWARD_CLAIM_FAILED = 12707;
+
+    // 飞船系统未开启
+    AIRSHIP_NOT_OPEN = 12800;
+    // 飞船升级条件不足
+    AIRSHIP_UPGRADE_MATERIAL_NOT_ENOUGH = 12801;
+    //当前账号不是本区服
+    NOT_SAME_ARENA_SERVER = 12802;
+    //bingo次数不足，需要重置
+    BINGO_NOT_ENOUGH = 12803;
+    // 飞船升级时，添加派遣任务失败
+    ERROR_AIRSHIP_UPGRADE_ADD_TASK = 12804;
+
+    // 商城物品未解锁
+    SHOP_ITEM_NOT_UNLOCKED = 12900;
+    // 未找到商城数据
+    SHOP_ITEM_NOT_FOUND = 12901;
+    // 超出限购数量
+    SHOP_ITEM_EXCEED_LIMIT = 12902;
+
+    //消息已过期
+    MSG_EXPIRED = 12903;
+
+    //拼图碎片使用已达上限（当前轮次中）
+    ERROR_PUZZLE_DEBRIS_USE_LIMIT = 12904;
+    //队伍已满
+    ERROR_TEAM_FULL = 12905;
+    //礼包支付类型非现金类型
+    ERROR_GIFT_PAY_NON_CASH_TYPE = 12906;
+    //礼包计费点异常
+    ERROR_GIFT_PRODUCT_ID = 12907;
+    //背包已满
+    ERROR_BAG_FULL = 12908;
+    //奖励未到到领取条件
+    ERROR_REWARD_NOT_MEET_CONDITION = 12909;
+
+    //替补队伍错误码
+    //第二阵容未开启
+    ERROR_SECOND_TEAM_NOT_OPEN = 13000;
+    //替补槽位未解锁
+    ERROR_RESERVE_SLOT_NOT_OPEN = 13001;
+    //英雄不符合星球阵营限制
+    ERROR_RESERVE_CAMP_LIMIT = 13002;
+    //英雄重复上阵
+    ERROR_HERO_DUPLICATE = 13003;
+    
+} 

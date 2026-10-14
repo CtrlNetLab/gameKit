@@ -1,0 +1,29 @@
+
+syntax = "proto3";
+package optscommon;
+option go_package = "__GO_OPTS__";
+
+
+message BanUser {
+    string playerId = 1 ;//用户ID
+    //以下字段封号时提供
+    int64 startTime = 2 ; //开始封号时间
+    int64 endTime = 3; //结束封号时间
+    BanType banType = 4; //封号类型
+}
+
+
+// 封禁类型
+enum BanType {
+  BAN_TYPE_NONE = 0 ;
+  BAN_TYPE_LOGIN = 1; //禁止登录
+  BAN_TYPE_FULL = 100 ;//完全封号
+}
+
+
+// 封禁操作类型
+enum BanOperateType {
+  BAN_OPERATE_TYPE_NONE = 0 ;
+  BAN_OPERATE_TYPE_MANUAL_BAN = 2 ; //人工封号
+  BAN_OPERATE_TYPE_MANUAL_UNBAN = 3 ; //人工解封
+}

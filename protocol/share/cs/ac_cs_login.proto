@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+// 业务模块协议示例: 登陆
+// 约定: 业务模块消息放 ac_cs_<模块>.proto, 命令字在 cs_cmdvalue.proto 注册
+
+// 业务登陆请求 ECV_CS_AC_LoginReq = 10002
+message CS_AC_LoginReq {
+    // 平台类型 0-游客；1-FB；2-谷歌(旧)；3-苹果；4-谷歌Play
+    int32 LoginType = 1;
+    // 平台用户ID(游客登录时为空)
+    string PlatformId = 2;
+    // 平台token(游客登录时为空)
+    string PlatformToken = 3;
+    // 游客ID(平台登录时为空)
+    string TouristId = 4;
+    // 设备ID
+    string DeviceId = 5;
+    // 设备系统, 如 iOS / Android
+    string DeviceOS = 6;
+    // 客户端版本
+    string ClientVer = 7;
+    // 语言
+    string Lang = 8;
+}
+
+// 业务登陆响应 ECV_CS_AC_LoginRes = 50002
+message CS_AC_LoginRes {
+    // @see EnmRetCode
+    uint32 RetCode = 1;
+    // 服务器时间，单位: 毫秒
+    int64 ServerTime = 2;
+    // 玩家账号ID(登陆成功后由服务器分配)
+    uint64 AccId = 3;
+}

@@ -1,0 +1,240 @@
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+
+import "google/protobuf/any.proto";
+
+/** API请求结果 */
+message APIResult {
+  ResultCode code = 1; //http返回码
+  string msg = 2 ; //消息
+  google.protobuf.Any data = 3; //返回数据
+}
+
+/** 奖品 */
+message Award {
+  int32 type = 1;  //类型
+  int32 id = 2 ;  //id
+  int32 count = 3; //数量
+  bool display = 4 ;//是否作为外部展示用
+  string displayImg = 5; //展示图
+  bool showEffect = 6 ;//是否展示特效
+
+  string showIcon = 7 ; //外显Icon
+
+}
+
+/** 时间范围 */
+message TimeRange {
+  int64 startTime = 1 ;//开始时间
+  int64 endTime = 2 ;//结束时间
+}
+
+//时限类型
+enum TimeLimitType {
+  NO_TIME_LIMIT_TYPE = 0 ;
+  TIME_RANGE = 1; //指定时间段
+  LONG_TERM = 2; //长期有效
+}
+
+
+/** 数量范围 */
+message AmountRange {
+  double min = 1 ; //最小值
+  double max = 2 ; //最大值
+}
+
+
+/** 多语言字符串*/
+message StrLangs {
+  string en  = 1 ; //英文
+  string chs = 2 ; //简体中文
+  string cht = 3 ; //繁体中文
+  string es = 4 ;//西班牙语
+  string it = 5 ;//意大利语
+  string pt = 6 ; //葡萄牙语
+  string de = 7 ; //德语
+  string fr = 8 ; //法语
+  string thai = 9 ; //泰语
+  string ja = 10 ; //日语
+  string ar = 11 ; //阿拉伯语
+  string tur = 12 ; //土耳其语
+
+  string langKey = 200 ;//多语言的key
+  StrLangCtrlType ctrlType = 201 ; //控制类型
+}
+
+enum StrLangCtrlType {
+  STR_LANG_CTR_TYPE_NONE = 0 ;
+  STR_LANG_CTR_TYPE_BY_OPERATE = 1 ; //运营自定义
+  STR_LANG_CTR_TYPE_BY_GAME_TABLE = 2 ; //游戏多语言表
+}
+
+/** 不同语言的图片*/
+message ImgLangs {
+  string en  = 1 ; //英文
+  string chs = 2 ; //简体中文
+  string cht = 3 ; //繁体中文
+  string es = 4 ;//西班牙语
+  string it = 5 ;//意大利语
+  string pt = 6 ; //葡萄牙语
+  string de = 7 ; //德语
+  string fr = 8 ; //法语
+  string thai = 9 ; //泰语
+  string ar = 10 ; //阿拉伯语
+  string ja = 11 ; //日语
+  string tur = 12 ; //土耳其语
+}
+
+
+/** 限购 */
+message LimitBuy {
+  LimitBuyType type = 1 ; //限购类型
+  int32 count = 2 ;//次数
+  TimeRange timeRange = 3; //时间范围
+}
+
+/** 限购类型 */
+enum LimitBuyType  {
+  NO_LIMIT_BUY_TYPE = 0 ; //不限 & 免费
+  DAY = 1 ; //每日限定
+  LIFE = 2; //终身
+  TIME = 3 ;// 限时
+  WEEK = 4 ; //每周限定
+  MONTH = 5; //每月限定
+  DISABLED = 10 ;//不能购买
+
+}
+
+/** 支付 */
+message Pay {
+  int32 type = 1 ; //支付类型
+  int32 payId = 2; //支付Id
+  double amount = 3 ;//支付金额/数量
+}
+
+
+
+/** 返回码 */
+enum ResultCode {
+
+  SUCCESS = 0  ; //成功
+  PARMA_ERROR = 400; //参数错误
+  NOT_FOUND = 404; //服务未找到
+  INNER_ERROR = 500; //内部错误
+
+  //兑换码 1000~1050
+  EXCHANGE_CODE_ERROR = 1000 ; //兑换码不正确（当前在线的活动中不存在此兑换码）
+  EXCHANGE_CODE_DISABLE = 1001 ; //兑换码已失效(兑换码正确，但是已被运营停用)
+  EXCHANGE_CODE_TIME_INVALID = 1002 ; //当前时间不在活动有效期内
+  EXCHANGE_CODE_PLAYER_IN_ACTIVITY_USE_PASS_LIMIT = 1003 ;//玩家账号参与活动次数超限
+  EXCHANGE_CODE_PLAYER_SAME_CODE_USE_PASS_LIMIT = 1004 ;//玩家账号单码核销次数超限
+  EXCHANGE_CODE_USE_PASS_LIMIT = 1005 ;//单码总核销次数超限
+
+}
+
+/** 玩家可见条件 */
+message PlayerCondition {
+  TimeCondition timeCondition = 1 ;//时间条件
+  int32 groupId = 3; //群组Id
+  bool playerGroupExclude = 4 ; //是否排除该群组
+
+  PlayerGroupCond playerGroupCond = 5 ; //玩家群组条件(20250911更新,支持多个群组)
+}
+
+/** 时间条件 */
+message TimeCondition {
+  TimeType type = 1 ;//时间类型
+  TimeRange buyLimitTime =  2;  //购买时间
+  TimeRange showLimitTime = 3;  //展示时间
+  int32 hourCond = 10 ;//小时条件
+  int32 startSec = 15;// 第几秒开始
+  int32 endSec = 16; //第几秒结束
+}
+
+/** 时间类型 */
+enum TimeCondType {
+  NO_TIME_TYPE = 0 ; //不限类型
+  TimeCond_RANGE = 1 ;//时间范围
+  TimeCond_AFTER_REGISTER = 2 ;//注册成功后
+}
+
+// 收件玩家类型
+enum ReceivePlayerType {
+  NO_PLAYER_TYPE = 0 ;
+  ALL = 1; //全体玩家
+  PLAYER_ID_TYPE = 2 ;//指定玩家ID
+  PLAYER_GROUP_TYPE = 3 ;//玩家群组
+}
+
+
+/** 业务模块 */
+enum BusinessMod {
+  ALL_MOD = 0 ; //所有模块
+
+  MALL_TEMP = 10 ;//商城模板
+  PLAYER_GROUP = 20 ;//用户群组
+  WAITE_LIST = 30 ;//白名单列表
+  MALL = 50 ;//商城
+  MALL_SHELF = 51 ;//商城货架
+  GIFT = 52 ;//礼包
+  ACTIVITY = 60 ; //普通活动模块
+  PUSH_GIFT = 70 ; //推送礼包
+  PUSH_NOTIFY = 72 ; //推送公告
+  ANNOUNCE = 75 ;//公告
+  ADVERT = 76 ; //广告
+
+  HERO_REWARD = 80 ;//英雄奖励
+  UP_CARD_POOL = 81 ;//up卡池
+  FLOATING_PRICING = 82 ; //浮动定价
+  ACTIVITY_LIBRARY = 83 ; //活动内嵌
+
+  BAN_ACCOUNT = 85 ; //封号
+}
+
+
+// 绝对时间和相对时间
+enum TimeType {
+  NO_TIME_COMPARE_TYPE = 0;
+  RELATIVE_TIME = 1; // 相对时间
+  ABSOLUTE_TIME = 2; // 绝对时间
+}
+
+
+//条件比较类型
+enum CompareType {
+  NO_CONDITION_VAL_COMPARE_TYPE = 0 ;
+  GT = 1 ; //大于
+  GTE = 2; //大于等于
+  LT = 3 ; //小于
+  LTE = 4;  //小于等于
+  EQUAL = 5 ;//相等
+  NO_EQUAL = 6 ;//不等于
+}
+
+
+
+/** 玩家群组条件 */
+message PlayerGroupCond {
+  repeated int32 groupIds = 1;  //玩家群组ID列表
+  PlayerGroupCondType condType = 2 ;//条件类型
+}
+
+/** 玩家群组条件类型 */
+enum PlayerGroupCondType {
+  NO_PLAYER_GROUP_COND_TYPE = 0 ;
+  PLAYER_GROUP_COND_TYPE_ALL = 1 ;//全都满足
+  PLAYER_GROUP_COND_TYPE_ALL_NO = 2 ;//全都不满足
+  PLAYER_GROUP_COND_TYPE_ONE = 3 ;// 一个满足
+  PLAYER_GROUP_COND_TYPE_ONE_NO = 4 ;// 一个不满足
+
+}
+
+/** 支付类型 */
+enum PayType {
+  NO_PAY_TYPE = 0 ;
+  EQUIPMENT = 1 ; //装备
+  ITEM = 2 ;//道具
+  RESOURCE = 3 ;// 资源
+}

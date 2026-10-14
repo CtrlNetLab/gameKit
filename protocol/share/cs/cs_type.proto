@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+// 游戏状态(CSLoginRes.GameState 使用; 新增状态在此追加, 接续编号)
+enum EnmGameState {
+    EGState_Init = 0;
+    // 大厅
+    EGState_Lobby  = 1;
+    // 普通匹配
+    EGState_PvP_Match  = 2;
+    // pvp 战斗中 (包括好友)
+    EGState_PvP_Battle = 3;
+    // 结算中
+    // EGState_Settle = 4;
+}

@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/ss;ss";
+package ss;
+
+enum EnmRetCode {
+    // 成功 
+    SUCCESS = 0;
+    
+    NEED_REGIST = 1;
+    DUPLICATE_REGIST = 2;
+    MISC_ACCLIST_TOO_MANY = 3;
+    // redis 错误 
+    REDIS = 4;
+    // mysql 错误 
+    MYSQL = 5;
+    // 没有角色 
+    NOT_FOUND_ACTOR = 6;
+    // 角色丢失没有处理 
+    MISS_HANDLER = 7;
+    // 超时 
+    TIME_OUT = 8;
+    // 非法服务类型 
+    MISC_INVALID_SERVICE_TYPE = 9;
+    // 没找到对应的 service
+    MISC_NOT_FOUND_SERVICE = 10;
+    // 不支持这个消息 
+    MISC_NOT_SUPPORT_MSG = 11;
+    // json 解包错误 
+    MISC_JSON_UNMARSHAL = 12;
+    // 订单数据已存在
+    GAME_ORDER_DATA_ALLREADY_EXISTS = 13;
+    // 参数错误
+    INVALID_PARAM = 14;
+    // AccId不是本地区
+    ACCID_NOT_LOCAL = 15;
+}
+

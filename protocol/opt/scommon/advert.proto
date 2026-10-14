@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+
+import "scommon/global.proto";
+
+//广告
+message Advert {
+
+  int32 id = 1 ; //id
+  string name = 2 ; //名字
+  optscommon.StrLangs title = 3 ; //标题
+  optscommon.StrLangs description = 4 ; //广告描述
+  AdvertType type = 5 ; //广告类型
+  optscommon.TimeRange showTime = 6 ; //展示时间
+  int32 refActivityId = 10 ; //关联的活动ID
+  int32 jumpPointId = 11 ; //跳转点id
+  optscommon.StrLangs img = 15 ; //图片配置
+
+  PlayerGroupCond playerGroupCond = 19 ; //玩家群组条件(20250911更新,支持多个群组)
+  int32 playerGroupId = 20; //玩家群组id
+  bool playerGroupExclude = 21 ; //是否排除该群组
+  int32 sort = 40 ; //排序用
+  bool isFollowActivity = 41 ; //是否跟随活动
+}
+
+//广告类型
+enum AdvertType {
+  NO_ADVERT_TYPE = 0 ;
+  AT_ACTIVITY = 1 ;//活动广告
+  AT_COMMERCE = 2 ;//商业广告
+  AT_BANNER = 3 ;//主页横幅广告
+}

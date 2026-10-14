@@ -1,0 +1,74 @@
+Roles:
+  gamesvr:
+    Host: "127.0.0.1"
+    Port: 9001
+    CtrlPort: 19001
+    HealthPort: 29001
+    ServiceId: 1
+  relaysvr:
+    Port: 9002
+    CtrlPort: 19002
+    HealthPort: 29002
+    ServiceId: 1
+  matchsvr:
+    Port: 9003
+    CtrlPort: 19003
+    ServiceId: 1
+  roomsvr:
+    Port: 9004
+    CtrlPort: 19004
+    ServiceId: 1
+  miscsvr:
+    Port: 9005
+    CtrlPort: 19005
+    HealthPort: 29005
+    ServiceId: 1
+  globalsvr:
+    Port: 9006
+    CtrlPort: 19006
+    ServiceId: 1
+  benchmark:
+    CtrlPort: 19007
+    ServiceId: 1
+
+Common:
+  GameId: gs
+  EnvName: "local_dev"
+  NetLog: false
+  GmOpenFlag: 2
+  LogLevel: "DEBUG"
+  CtrlDocPort: 0
+  HealthMaxNum: 2
+
+Locationing:
+  DefaultLocation: "AS"
+
+MySQL:
+  HostList:
+    - "127.0.0.1"
+  Port: 3306
+  User: "root"
+  Passwd: "123456"
+  GormDebug: false
+  AccData:
+    DBName: "accdb_gs"
+  PlayerData:
+    DBName: "roledb_gs"
+  GlobalData:
+    DBName: "globaldb_gs"
+
+Redis:
+  AddrList:
+    - "127.0.0.1:6379"
+  Passwd: ""
+  DB: 0
+
+RedisKey:
+  OnlineKey: "gs_online"
+  RoleNameKey: "gs_rolename"
+  RoleInfoKey: "gs_roleinfo"
+  OfflineDataKey: "gs_offlinedata"
+  PlayerDBDataKey: "gs_playerdbdata"
+
+platform:
+  logsvr: "127.0.0.1:9999"

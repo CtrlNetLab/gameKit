@@ -1,0 +1,112 @@
+
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+import "scommon/global.proto" ;
+
+/** 模板数据 */
+message MallTemplate {
+  int32 id = 1; //唯一ID
+  TemplateType tempType = 2 ;//模板类型
+  string name = 3; //模板名
+  CardSizeType cardSizeType = 4; //卡片大小类型
+  int32 clientTempId = 5; //客户端Id
+}
+
+/** 商城模板类型 */
+enum TemplateType {
+  NO_TEMPLATE_TYPE = 0 ;
+  TT_MALL = 1 ; //商城
+  TT_SHELF = 2 ;//货架
+  TT_GIFT = 3; //礼包
+}
+
+/** 商城卡片大小类型 */
+enum CardSizeType {
+  NO_CARD_SIZE_TYPE = 0 ;
+  SMALL = 1 ; //小
+  MIDDLE = 2 ; //中
+  LARGE  = 3; //大
+  NO_UI_SIZE = 4 ;//无UI
+  VIP = 5; //VIP 专用
+  PUSH = 6; //推送礼包
+}
+
+// 商城
+message Mall {
+  int32 id = 1 ; //唯一ID
+  optscommon.StrLangs name = 3 ;//商城名
+  int32 tempId = 4;//
+
+//  int32 clientTempId = 4 ;//客户端识别Id
+  int32 clientEntryId = 5; //客户端入口Id
+  repeated RefItem refShelfs = 7 ; //关联的货架列表
+  repeated MallBanner banners = 8; //轮播图
+}
+
+
+// 商城轮播图信息
+message MallBanner {
+  string resKey = 1 ;//资源地址
+  PlayerCondition playerCondition = 2 ;//玩家可见条件
+  int32 refShelfId = 40 ; //关联的货架ID
+  repeated int32 refGiftIds = 50 ; //关联的礼包ID列表
+}
+
+
+/** 货架 */
+message MallShelf {
+
+  int32 id = 1 ; //货架Id
+  int32 tempId = 3; //模板id
+//  string clientTempId  = 4 ;//客户端识别id
+  optscommon.StrLangs name = 5 ;//货架名
+
+  repeated RefItem refGifts = 6 ; //关联的礼包信息
+  repeated GiftRefItemGroup refGiftGroups = 7 ;//关联礼包组
+  
+  int32 jumpId = 10 ; //跳转点Id
+
+  TotalRechargeRewardConfig totalRechargeRewardConfig = 25 ; //累计充值奖励
+}
+
+
+// 累计充值奖励配置
+message TotalRechargeRewardConfig {
+  TimeRange timeRange = 1 ; //时间范围
+  int32 payType = 2 ; //支付类型
+  repeated TotalRechargeRewardItem rewards = 3; //奖励列表
+}
+
+// 累计充值奖励项
+message TotalRechargeRewardItem {
+  double limitAmount = 1 ; //奖励阈值
+  repeated optscommon.Award awards = 2 ; //奖励列表
+}
+
+
+
+/** 关联项 */
+message RefItem {
+  int32 id = 1 ;//目标id
+  PlayerCondition playerCondition = 2 ;//玩家可见条件
+  int32 groupSort = 5; //分组排序
+}
+
+
+/** 礼包关联组 */
+message GiftRefItemGroup {
+  repeated RefItem refGifts1 = 1 ; //关联的礼包信息
+  repeated RefItem refGifts2 = 2 ; //关联的礼包信息
+  GiftGroupType groupType = 3 ; //礼包组类型
+}
+
+
+/** 礼包组类型 */
+enum GiftGroupType {
+  GIFT_GROUP_TYPE_NONE = 0 ;
+  GIFT_GROUP_TYPE_SENIOR = 1 ; //重点
+  GIFT_GROUP_TYPE_ORDINARY = 2 ; //普通
+  GIFT_GROUP_TYPE_DAILY = 3 ; //每日奖励
+}

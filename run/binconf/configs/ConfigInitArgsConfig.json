@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "name": "Heart_Interval",
+      "val": [
+        "30"
+      ]
+    },
+    {
+      "name": "Heart_Recover_Time",
+      "val": [
+        "900"
+      ]
+    },
+    {
+      "name": "Login_Suspend_Time",
+      "val": [
+        "90"
+      ]
+    },
+    {
+      "name": "ChatHistoryCount",
+      "val": [
+        "300"
+      ]
+    },
+    {
+      "name": "ServerRolling_Notify",
+      "val": [
+        "0"
+      ]
+    },
+    {
+      "name": "Version",
+      "val": [
+        "dev-v1.0.0"
+      ]
+    }
+  ]
+}

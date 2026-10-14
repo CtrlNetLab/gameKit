@@ -1,0 +1,20 @@
+/*@brief: ----auto generate----*/
+
+syntax = "proto3";
+option go_package = "gamekit/pkg/configs;configs";
+package configs;
+
+message ConfigInitArgsConfig {
+	/* 
+	* 参数名称(不能有空格)
+	*/
+	string name = 1;
+	/* 
+	* 条件1参数
+	*/
+	repeated string val = 2;
+}
+
+message ConfigInitArgsConfigArray {
+	repeated ConfigInitArgsConfig items = 1;
+}

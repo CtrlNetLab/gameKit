@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "en": "sampleword1"
+    },
+    {
+      "id": 2,
+      "en": "sampleword2"
+    },
+    {
+      "id": 3,
+      "en": "sampleword3"
+    },
+    {
+      "id": 4,
+      "en": "sampleword4"
+    },
+    {
+      "id": 5,
+      "en": "sampleword5"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+Network:
+    ServerService: "0.0.0.0:{{ dist_user.Roles.roomsvr.Port | default(Roles.roomsvr.Port, true) }}"
+
+Control:
+    # 用于监听 UDP 控制指令, 这个端口只能通过防火墙指定 ip 来访问
+    Service: "127.0.0.1:{{ dist_user.Roles.roomsvr.CtrlPort | default(Roles.roomsvr.CtrlPort, true) }}"
+    # 加密密钥
+    ScrtKey: "9WepkO@WlcYex&wW"
+
+Redis:
+    # 在线 redis
+    Online:
+        AddrList: {{ Redis.Online.AddrList or Redis.AddrList }}
+        Passwd: "{{ Redis.Online.Passwd or Redis.Passwd }}"
+        DB: {{ Redis.Online.DB if Redis.Online.DB is integer else Redis.DB }}
+        MinIdleConns: 10
+        # 提前加载脚本
+        Scripts:
+            onlineCheck: "../../redislua/checkOnline.lua"
+            offline: "../../redislua/offline.lua"
+
+Common:
+    GameId: {{ Common.GameId }}
+    EnvName: {{ Common.EnvName }}
+    # 链接超时时间，长时间没收到消息之后就断开连接，单位: 秒
+    ConnTimeOut: 300
+    # 服务类型(与 ss.ServiceType 对应)
+    ServiceType: "RoomSvr"
+    # 服务 id, 同一类型的服务 id 不能一样, 否则启动会失败
+    ServiceId: {{ dist_user.Roles.roomsvr.ServiceId | default(Roles.roomsvr.ServiceId, true) }}
+    # Gm 开关, 0: 关闭 Gm 命令; 1: 只有 Gm 号才可以执行 Gm 命令; 2: 所有人都可以执行 Gm 命令
+    GmOpenFlag: {{ Common.GmOpenFlag }}
+    # 结算余额时间, 单位: 秒
+    SendBalanceTm: 60
+    # 服务重连时间，单位: 毫秒
+    ReConnTm: 3000
+    # 重连次数, -1: 表示无限次重连
+    ReConnNum: -1
+    # 最大房间数
+    MaxRoomNum: 1000
+    # 是否要开启加密, false: 不开启; true: 开启
+    XXTeaOpen: false
+    # 密钥
+    XXTeaKey: AA9zg1CZMnYLpA5H
+    # 服务正式上线的时间
+    StartService: "2023-01-01"
+    NetLog: {{ Common.NetLog }}
+    # 心跳包超时时间, 单位: 毫秒
+    HeartTimeOut: 2000
+    # 房间心跳超时时间, 单位: 秒
+    RoomHeartTimeOut: 60
+    # 竞技场列表
+    ArenaList: [1, 2]
+
+Locationing:
+    # 默认位置信息 [AF]非洲, [EU]欧洲, [AS]亚洲, [OA]大洋洲, [NA]北美洲, [SA]南美洲, [AN]南极洲
+    DefaultLocation: "{{ Locationing.DefaultLocation }}"

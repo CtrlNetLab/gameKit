@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/game_third;game_third";
+package game_third;
+
+message PayNotifyData {
+    // cp 订单号
+    string CpOrderId = 1;
+    // 第三方订单号
+    string OrderId = 2;
+    // 支付方式
+    int32 PayType = 4;
+    // 用户 userid
+    string UserId = 5;
+    // 登录方式
+    int32 LoginType = 6;
+    // 区服 id
+    string ServerId = 7;
+    // 账号 id
+    uint64 AccId = 8;
+    // 角色 id
+    string RoleId = 9;
+    // 订单支付金额，单位：分
+    uint32 Price = 10;
+    // 购买商品id
+    string ItemId = 11;
+    // 购买数量
+    uint32 ItemCount = 12;
+    // 商品名称
+    string ItemName = 13;
+    // 额外数据，unbase64 后 json 格式
+    string Extra = 14;
+    // 支付时间
+    string PayTime = 15;
+    // 计费点ID
+    string RechargePointId = 16;
+    // 系统类型
+    string OS = 17;
+     // 子渠道
+    string SubPlatType = 18;
+    // 是否是订阅
+    bool IsSubscription = 19;
+    // 是否是沙盒环境支付
+    bool IsSandBox = 20;
+}
+
+
+// 支付发货通知 ECV_SSPlatPayNotifyReq = 100020
+message SSPlatPayNotifyReq {
+    PayNotifyData PayData = 1;
+}
+
+// 支付发货通知 (写入数据库) ECV_SSPlatPayNotifyRes = 100021
+// 发货情况参考Head中的RetCode
+message SSPlatPayNotifyRes {
+    PayNotifyData PayData = 1;
+}
+
+// 获取还未发货订单请求  ECV_SSGetNotShippedPayDataReq = 100056
+message SSGetNotShippedPayDataReq {
+    string PlatType = 1;
+    string UserId = 2;
+    uint64 AccId = 3;
+}
+
+// 获取还未发货订单响应 ECV_SSGetNotShippedPayDataRes = 100057
+message SSGetNotShippedPayDataRes {
+    repeated PayNotifyData PayDatas = 1; 
+    string PlatType = 2;
+    string UserId = 3;
+    uint64 AccId = 4;
+}
+
+// 支付订单发货状态通知paysvr ECV_SSPayDataResultNotify = 100058
+message SSPayDataResultNotify {
+    message PayDataResult {
+        uint32 RetCode = 1;
+        PayNotifyData PayData = 2;
+    }
+   
+    repeated PayDataResult Results = 3;
+}
+
+message SubscriptionData {
+    string ProductId = 1;// 商品id（计费点ID）
+    string StartTime = 2;// 订阅开始时间
+    string ExpireTime = 3;// 订阅过期时间 
+    bool IsSandBox = 4;// 是否是沙盒环境
+    string OrderId = 5; //whoot订单号
+    string CpOrderId = 6; //cp订单号
+    bool IsRenew = 7; // 是否是续订
+}
+
+// google订阅数据更新通知
+message SSSubscriptionNotify {
+    repeated SubscriptionData Subscriptions = 1;
+}
+
+// 订阅取消通知数据
+message SubscriptionCancelData {
+    string ProductId = 1;  // 商品id（计费点ID）
+    string OrderId = 2;    // whoot订单号
+    string CpOrderId = 3;  // cp订单号
+    int32 Channel = 4;     // 渠道: 1-AppStore 2-GooglePlay
+}
+
+// 订阅取消通知
+message SSSubscriptionCancelNotify {
+    repeated SubscriptionCancelData Cancellations = 1;
+}

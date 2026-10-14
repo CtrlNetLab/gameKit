@@ -1,0 +1,78 @@
+
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+
+import "scommon/global.proto";
+
+// 礼包
+message Gift {
+
+  int32 id = 1 ; //礼包id
+  int32 tempId = 2; //模板Id
+
+  optscommon.StrLangs name = 3 ;//礼包名
+  optscommon.StrLangs introduce1 = 4 ;//礼包介绍1
+  optscommon.StrLangs introduce2 = 5 ;//礼包介绍2
+  bool useIntroduce1 = 6 ;//是否启动介绍1
+  bool useIntroduce2 = 7 ;//是否启动介绍2
+
+  bool iconImgDefault = 9 ; //是否使用默认图标图片
+  optscommon.ImgLangs iconImgs = 10 ; //自定义图标图片
+
+  bool bgImgDefault = 11 ; //是否使用默认背景图片
+  optscommon.ImgLangs bgImgs = 12 ; //自定义背景图片
+  optscommon.StrLangs bonus = 20;//bonus
+  bool useBonus = 21 ;//是否启动bonus
+  int32 vipValidDay = 22 ;//vip有效时间
+  optscommon.LimitBuy limitBuy = 23; //限购
+
+  optscommon.Pay pay = 25 ;//支付
+
+  string productId = 28; //计费点
+
+  int32 mailId = 30; //发奖邮件ID
+
+  DiscountPayConfig discountPayConfig = 35 ; //折扣支付配置
+
+  repeated optscommon.Award awards = 40 ; //奖品列表（vip日奖励）
+  repeated optscommon.Award disposableAwards = 41 ;//一次性奖励
+  repeated optscommon.Award weekAwards = 42 ;//vip周奖励
+  repeated optscommon.Award monthAwards = 43 ;//vip月奖励
+
+  int32 dayExpiration = 44 ;//vip日奖励倒计时
+  int32 weekExpiration = 45 ;//vip周奖励倒计时
+  int32 monthExpiration = 46 ;//vip月奖励倒计时
+
+
+  repeated int32 refGiftIds = 50; //关联礼包id列表
+
+  repeated MulRefGiftItem refGifts = 55 ; //多层礼包包含礼包列表
+
+  int32 useHeroUpgradeStarRewardGroupNum = 60 ;//使用英雄升星奖励组编号
+}
+
+
+// 折扣支付
+message DiscountPayConfig {
+  int32 payType = 1 ; //支付类型
+  DiscountPayItem oriPay = 2 ; // 原价
+  repeated DiscountPayItem discountItems = 3 ; //折扣列表项
+}
+
+// 折扣配置项
+message DiscountPayItem {
+  double amount = 1 ; //支付金额/数量
+  string productId = 2; //计费点
+  int32 itemId = 3 ; //道具ID
+  string remark = 4 ;//备注
+}
+
+
+//多层礼包关联礼包项
+message MulRefGiftItem {
+  int32 giftId = 1 ; //关联的礼包Id
+  string beforeBuyImg = 2 ;//购买前展示图
+  string afterBuyImg = 3 ;//购买后展示图
+}

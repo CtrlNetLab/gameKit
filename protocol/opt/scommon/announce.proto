@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+import "scommon/global.proto";
+
+
+//公告
+message Announce {
+
+  int32 id = 1 ; //id
+  string name = 2 ; //名字
+  optscommon.StrLangs type = 5 ; //公告类型
+  optscommon.StrLangs title = 6 ; //公告标题
+  optscommon.StrLangs content = 7 ; //公告内容
+  optscommon.TimeRange showTime = 10 ; //展示时间
+  bool playerGroupExclude = 11 ; //是否排除该群组
+  int32 playerGroupId = 12; //玩家群组id
+  optscommon.StrLangs img = 13 ; //图片配置
+  PlayerGroupCond playerGroupCond = 14 ; //玩家群组条件(20250911更新,支持多个群组)
+  repeated AnnounceLinkDto links = 15 ;//超链接
+  int32 sort = 40 ; //排序用
+}
+
+// 公告链接
+message AnnounceLinkDto {
+  string url = 1;
+  string btnLogo = 2;
+  string btnKey = 3 ;
+}

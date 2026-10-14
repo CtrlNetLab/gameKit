@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+import "cs/cs_enum.proto";
+
+message AttrPair {
+    // 属性类型
+    cs.EnmAttrType Type = 1;
+    // 初始值
+    uint32 OriValue = 2;
+    // 提升值
+    uint32 UpValue = 3;
+}
+
+message CSItemPair {
+    // 物品 ID
+    uint32 ID        = 1;
+    // 使用个数
+    uint32 Count     = 2;
+}
+
+message CSAttrData {
+    // 属性 k,v
+    EnmAttr AttrKey = 1;
+    uint32  AttrValue = 2;
+}
+
+// 属性变化通知 ECV_CSAttrNotiy
+message CSAttrNotiy {
+    repeated CSAttrData AttrList = 1;
+}
+
+message CSCommonTipsNotify {
+}
+
+message CSItemStatisticReq {
+}
+
+// 玩家个人信息(占位, 业务可扩展)
+message RoleInfoData {
+    // @TODO 用户基本信息
+}
+
+message CSPlayerData {
+    // @TODO 用户基本信息
+}
+
+// 房间透传边界标记 ECV_CSTransRoomReq = 1000000
+// 大于该命令字的客户端协议由 gamesvr 直接转发 roomsvr 处理, 本消息仅为协议生成脚本占位
+message CSTransRoomReq {
+}

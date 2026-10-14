@@ -1,0 +1,137 @@
+Network:
+    ClientService: "0.0.0.0:{{ dist_user.Roles.gamesvr.Port | default(Roles.gamesvr.Port, true) }}"
+
+Control:
+    # 用于监听 UDP 控制指令, 这个端口只能通过防火墙指定 ip 来访问
+    Service: "127.0.0.1:{{ dist_user.Roles.gamesvr.CtrlPort | default(Roles.gamesvr.CtrlPort, true) }}"
+    # 加密密钥
+    ScrtKey: "9WepkO@WlcYex&wW"
+    # Ctrl 命令文档 HTTP 接口端口（需 go build -tags ctrldoc 编译才生效）
+    CtrlDocPort: {{ Common.CtrlDocPort | default(0) }}
+
+MySQL:
+    AccData:
+        # IP 数量要能被 64 整除，只能是 {1,2,4,8,16,32,64} 中的一个值
+        HostList: {{ MySQL.AccData.HostList or MySQL.HostList }}
+        DBName: "{{ MySQL.AccData.DBName }}"
+        SplitNum: 64
+        TablePrefix: "DBAccData_"
+        Port: {{ MySQL.AccData.Port or MySQL.Port }}
+        User: "{{ MySQL.AccData.User or MySQL.User }}"
+        Passwd: "{{ MySQL.AccData.Passwd or MySQL.Passwd }}"
+        CharSet: "utf8"
+        Debug: {{ MySQL.GormDebug }}
+        DBMaxIdleConns: 10
+        MaxOpenConns: 64
+        ConnMaxLifetime: 3600
+    PlayerData:
+        # IP 数量要能被 64 整除，只能是 {1,2,4,8,16,32,64} 中的一个值
+        HostList: {{ MySQL.PlayerData.HostList or MySQL.HostList }}
+        DBName: "{{ MySQL.PlayerData.DBName }}"
+        SplitNum: 64
+        TablePrefix: "DBPlayerData_"
+        Port: {{ MySQL.PlayerData.Port or MySQL.Port }}
+        User: "{{ MySQL.PlayerData.User or MySQL.User }}"
+        Passwd: "{{ MySQL.PlayerData.Passwd or MySQL.Passwd }}"
+        CharSet: "utf8"
+        Debug: {{ MySQL.GormDebug }}
+        DBMaxIdleConns: 10
+        MaxOpenConns: 64
+        ConnMaxLifetime: 3600
+
+Redis:
+    # 在线 redis
+    Online:
+        AddrList: {{ Redis.Online.AddrList or Redis.AddrList }}
+        Passwd: "{{ Redis.Online.Passwd or Redis.Passwd }}"
+        DB: {{ Redis.Online.DB if Redis.Online.DB is integer else Redis.DB }}
+        MinIdleConns: 10
+        # 提前加载脚本
+        Scripts:
+            onlineCheck: "../../redislua/checkOnline.lua"
+            offline: "../../redislua/offline.lua"
+            saveToken: "../../redislua/saveToken.lua"
+    # 生成 AccId redis
+    AccId:
+        AddrList: {{ Redis.AccId.AddrList or Redis.AddrList }}
+        Passwd: "{{ Redis.AccId.Passwd or Redis.Passwd }}"
+        DB: {{ Redis.AccId.DB if Redis.AccId.DB is integer else Redis.DB }}
+        MinIdleConns: 10
+        Scripts:
+            createAccId: "../../redislua/createAccId.lua"
+            updatePlayerIndex: "../../redislua/updatePlayerIndex.lua"
+            findPlayer: "../../redislua/findPlayer.lua"
+    # 游戏缓存
+    GameCache:
+        AddrList: {{ Redis.GameCache.AddrList or Redis.AddrList }}
+        Passwd: "{{ Redis.GameCache.Passwd or Redis.Passwd }}"
+        DB: {{ Redis.GameCache.DB if Redis.GameCache.DB is integer else Redis.DB }}
+        MinIdleConns: 10
+
+RedisKey:
+    OnlineKey: "{{ RedisKey.OnlineKey }}"
+    RoleNameKey: "{{ RedisKey.RoleNameKey }}"
+    RoleInfoKey: "{{ RedisKey.RoleInfoKey }}"
+    OfflineDataKey: "{{ RedisKey.OfflineDataKey }}"
+    PlayerDBDataKey: "{{ RedisKey.PlayerDBDataKey }}"
+
+Common:
+    GameId: {{ Common.GameId }}
+    EnvName: {{ Common.EnvName }}
+    # 链接超时时间，长时间没收到消息之后就断开连接，单位: 秒
+    ConnTimeOut: 300
+    # 定时回写数据库
+    UpdateDBTm:
+        - 50
+        - 90
+    # Gm 开关, 0: 关闭 Gm 命令; 1: 只有 Gm 号才可以执行 Gm 命令; 2: 所有人都可以执行 Gm 命令
+    GmOpenFlag: {{ Common.GmOpenFlag }}
+    # 服务 id, 同一类型的服务 id 不能一样, 否则启动会失败
+    ServiceId: {{ dist_user.Roles.gamesvr.ServiceId | default(Roles.gamesvr.ServiceId, true) }}
+    # 是否要开启加密, false: 不开启; true: 开启
+    XXTeaOpen: false
+    # 密钥
+    XXTeaKey: AA9zg1CZMnYLpA5H
+    # 是否开启压缩:
+    PressOpen: false
+    # 服务正式上线的时间
+    StartService: "2023-01-01"
+    NetLog: {{ Common.NetLog }}
+    # reids名字注册过期时间
+    RoleNameExTm: 60
+    # ip限流检测
+    LimitIpOpen: true
+    # ip限流人数
+    LimitIpMax: 20
+    # 限时登录
+    LimitLoginOpen: false
+    # 控制登录时间的左右限制时间 小于第一个参数游戏不开放，大于右边参数 不做限制登录
+    LimitTimeInterval: [1683878400, 1684396800]
+    # 控制登录时间的阶段时间, 左开又闭
+    LimitTimeStage: [1683878400, 480, 1683964800, 480, 1684051200, 480, 1684137600, 480, 1684224000, 480, 1684310400, 480]
+    # 注意:该配置只能停服更新, 从false改为ture时需要清除redis缓存
+    UseRedisCache: True
+    # 协程池大小
+    WorkerPoolSize: 257
+    # 延迟关闭conn时间: 秒
+    DelayCloseConnTime: 30
+    # 健康检查端口
+    HealthPort: {{ dist_user.Roles.gamesvr.HealthPort | default(Roles.gamesvr.HealthPort, true) }}
+    #健康检查最大次数，大于等于该次数会发送重连消息,需要与云平台一致。aws默认是2.
+    HealthMaxNum: {{ Common.HealthMaxNum }}
+    # 云平台健康检测时间间隔(秒)
+    HealthCheckInterval: 5
+
+HttpClient:
+    TimeOut: 60s
+    MaxIdleConnsPerHost: 16
+    MaxConnsPerHost: 256
+    IdleConnTimeout: 90s
+    TLSHandshakeTimeout: 10s
+    ExpectContinueTimeout: 2s
+    TcpTimeOut: 10s
+    TcpKeepAlive: 60s
+
+Locationing:
+    # 默认位置信息 [AF]非洲, [EU]欧洲, [AS]亚洲, [OA]大洋洲, [NA]北美洲, [SA]南美洲, [AN]南极洲
+    DefaultLocation: "{{ Locationing.DefaultLocation }}"

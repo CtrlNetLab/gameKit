@@ -1,0 +1,17 @@
+RelaySvr: {{ RelaySvr }}
+
+Common:
+  # 服务之间心跳包频率，单位: 毫秒
+  RelayHeartTm: 2000
+  # 心跳 RTT 超过阈值后输出错误日志，单位时间：毫秒
+  HeartResTm: 1000
+  # 心跳包超时时间，一定要不大于 ServiceHeartTm
+  HeartTimeOut: 3000
+  # 几次心跳包超时之后就认为连接已经断开，需要重连
+  MaxHeartNum: 3
+  # 服务重连时间，单位: 毫秒
+  ReConnTm: 3000
+  # 重连次数, -1: 表示无限次重连
+  ReConnNum: -1
+  # 转发消息超时时间，单位：毫秒
+  DelayTimeOut: 5000

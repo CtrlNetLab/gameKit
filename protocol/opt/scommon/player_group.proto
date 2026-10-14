@@ -1,0 +1,40 @@
+
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+
+import "scommon/global.proto";
+
+/** 玩家分群方式 */
+enum PlayerGroupType {
+  NO_GROUP_TYPE = 0 ;
+  FIXED = 1 ;//固定人群
+  DYNAMIC = 2 ; //动态匹配
+}
+
+/** 群组匹配条件 */
+message GroupCondition {
+  int32 condType = 1 ; //条件类型
+  GroupCondVal condVal = 2 ;//值
+}
+
+/** 群组条件值 */
+message GroupCondVal {
+  optional CompareType compareType  = 1; //比较类型
+  optional double compareVal = 2; //比较的值
+  optional TimeType timeType = 5 ;// 时间类型：相对、绝对
+  optional int64 time = 6 ; //时间戳
+
+  int32 gameConfigId = 10; //游戏配置Id 比如家园枚举、 装备Id等游戏配置
+  repeated int32 gameConfigIds = 11 ;//游戏配置id列表
+  string gameId = 12 ; //游戏id
+  repeated string gameIds = 13 ; //游戏id列表
+  string strVal = 19 ; //通用字符串值
+  int32 rewardId = 21; // 奖励ID
+  int32 intVal = 22 ; //通用整型值
+  TimeRange timeRange = 30 ;//时间范围
+  AmountRange amountRange = 31 ;//数值范围
+  bool boolVal = 32 ; //布尔型值 
+}
+

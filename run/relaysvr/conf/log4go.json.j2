@@ -1,0 +1,54 @@
+{
+    "console": {
+        "enable": false,
+        "level": "{{ Common.LogLevel }}"
+    },
+    "files": [
+        {
+            "enable": true,
+            "level": "{{ Common.LogLevel }}",
+            "filename": "../log/relaysvr.log",
+            "category": "MainLog",
+            "pattern": "[%D %T] [%C] [%L] (%S) %M",
+            "rotate": true,
+            "maxsize": "100M",
+            "daily": true,
+            "sanitize": true,
+            "maxbackup": 1000
+        },
+        {
+            "enable": true,
+            "level": "{{ Common.LogLevel }}",
+            "filename": "../log/relaysvr_monitor.log",
+            "category": "MonitorLog",
+            "pattern": "[%D %T] %M",
+            "rotate": true,
+            "maxsize": "100M",
+            "daily": true,
+            "sanitize": true,
+            "maxbackup": 1000
+        },
+        {
+            "enable": true,
+            "level": "{{ Common.LogLevel }}",
+            "filename": "../log/relaysvr_oss.log",
+            "category": "LocalOSS",
+            "pattern": "%M",
+            "rotate": true,
+            "maxsize": "100M",
+            "daily": true,
+            "sanitize": true,
+            "maxbackup": 1000
+        }
+    ],
+    "sockets": [
+        {
+            "enable": true,
+            "level": "{{ Common.LogLevel }}",
+            "category": "OSSLog",
+            "pattern": "%M",
+            "addr": "{{ platform.logsvr }}",
+            "protocol": "udp"
+        }
+    ]
+}

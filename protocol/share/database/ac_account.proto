@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/database;database";
+/// !!! @NOTE 这个文件不能依赖任何其他文件，也不可以有 required 类型，避免兼容性出现问题，例如：解包失败导致玩家登陆失败、数据回滚等 
+
+package database;
+
+// 账号数据(框架最小示例)
+// 业务字段请放到自有模块的 proto(如 ac_cs_<模块>.proto / 自有 database proto)中扩展,
+// 不要直接往本文件堆业务字段, 保证账号结构的稳定性
+message Account {
+
+    /**
+     * 账号UUID【唯一】
+     */
+    string accountId = 1;
+
+    /**
+     * 8位账号id： 对应现在的AccId的十六进制格式
+     */
+    string sid = 2;
+
+    /**
+     * 登录信息
+     */
+    LoginInfo loginInfo = 4;
+
+    /**
+     *  第三方绑定信息
+     */
+    repeated PlatformUser platformUserList = 5;
+
+    /**
+     * 基础信息
+     */
+    BasicInfo basicInfo = 6;
+}
+
+// 登录信息
+message LoginInfo {
+    // 注册时间
+    int64 registerTime = 1;
+    // 登录时间
+    int64 loginTime = 2;
+    // ip地址
+    string serverIp = 3;
+    // 是否直接第三方平台登录
+    bool isDirectPlLogin = 4;
+    // 设备ID
+    string deviceId = 5;
+    // 设备操作系统
+    string deviceOS = 6;
+    // 操作系统版本
+    string deviceOSVersion = 7;
+    // 设备型号
+    string deviceModel = 8;
+    // 网络类型
+    string networkCategory = 9;
+    // app版本号
+    string appVersion = 10;
+    // 系统语言
+    string systemLanguage = 11;
+    // 访客ID
+    string distinctId = 12;
+    // 是否注销（0-否;1-是;）
+    int32 isDel = 13;
+    // 过期时间
+    int64 expire = 14;
+    // 是否绑定过第三方平台（0-否;1-是;）
+    int32 platformBind = 15;
+    // 地区服字段
+    string region = 16;
+    // 玩家地区/国家
+    string country = 17;
+    // 玩家分组
+    int32 playerGroup = 18;
+    // 玩家分组版本
+    int32 playerGroupVersion = 19;
+    // 玩家语言
+    string appLanguage = 20;
+    // 玩家地区/国家
+    string firstCountry = 21;
+}
+
+// 第三方平台账号
+message PlatformUser {
+    string id     = 1;
+    int32 type    = 2;
+    string remark = 3;
+}
+
+// 账号基础信息
+message BasicInfo {
+    // 账号名称
+    string name = 1;
+    // 账号头像
+    string head = 2;
+    // 账号等级
+    int32 level = 3;
+    // 累计登录天数
+    int32 aggregateLogin = 4;
+    // 账号登录时间
+    int64 loginTime = 5;
+    // 登录总次数
+    int64 loginCount = 6;
+    // 账号创建时间
+    int64 createTime = 7;
+    // 改名次数
+    int32 renameCount = 10;
+    // 上次登录时间
+    int64 LastLoginTime = 14;
+    // 连续登录天数
+    int32 ContinuesLoginDays = 15;
+    // 数据补丁版本
+    int32 PatchVersion = 16;
+    // 等级到达待突破状态时候,获得的经验值要暂存,等突破后一起加上去
+    int64 ExpTemp = 17;
+    // 用于账号等级突破时,记录上次突破的等级
+    int32 LastBreakLevel = 18;
+    // 记录掉落账号等级突破掉落道具时候的等级
+    int32 LastBreakItemLevel = 19;
+    // 头像框ID
+    int32 HeadFrameId = 25;
+    // 登陆次数，之前那个会用于第0关判断，导致通关第0关后登录次数会直接变成2，这里新加字段只用于统计登陆次数
+    int32 EventLoginCount = 26;
+    // 头像ID
+    int32 HeadId = 27;
+    // 客户端有些模块需要做动画表现，做过了之后会存到这个数据里
+    repeated int32 unlockAnimation = 29;
+    // 数据引导补丁版本
+    int32 PatchGuideVersion = 30;
+    // 总共在线时间(秒)
+    int32 OnlineTime = 31;
+}

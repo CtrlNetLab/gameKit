@@ -1,0 +1,20 @@
+/*@brief: ----auto generate----*/
+
+syntax = "proto3";
+option go_package = "gamekit/pkg/configs;configs";
+package configs;
+
+message WordsConfig {
+	/* 
+	* 序号
+	*/
+	int32 id = 1;
+	/* 
+	* 英文词
+	*/
+	string en = 2;
+}
+
+message WordsConfigArray {
+	repeated WordsConfig items = 1;
+}

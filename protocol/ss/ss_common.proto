@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/ss;ss";
+package ss;
+
+// ===== 服务注册与心跳（框架级）=====
+
+// gamesvr 启动向 relaysvr 注册请求 ECV_SSRegistReq = 3000001
+message SSRegistReq {
+    int32 Type = 1;
+    int32 Id = 2;
+    // 告知relay服务所在的地区
+    int32 AreaId = 3;
+}
+
+// gamesvr 启动向 relaysvr 注册响应 ECV_SSRegistRes = 3000002
+message SSRegistRes {
+    // 告知服务relay所在的地区
+    int32 RelayAreaId = 4;
+}
+
+// 服务之间的心跳包请求 ECV_SSHeartReq = 3000003
+message SSHeartReq {
+}
+
+// 服务之间的心跳包响应 ECV_SSHeartRes = 3000004
+message SSHeartRes {
+}
+
+// 协议转发，程序当中不会使用，用于协议生成脚本 ECV_SSTransReq = 3000024
+message SSTransReq {
+}
+
+// misc 相关协议 ECV_SSMiscReq = 3000022
+message SSMiscReq {
+}
+
+// misc 相关协议 ECV_SSMiscRes = 3000023
+message SSMiscRes {
+}
+
+// 测试连通性 ECV_SSTransTestReq = 3000154
+message SSTransTestReq {
+    uint64 Value = 1;
+}
+
+// 测试连通性 ECV_SSTransTestRes = 3000155
+message SSTransTestRes {
+    uint64 Value = 1;
+}
+
+// 获取 relaysvr 注册的所有服务 ECV_SSGetAllServiceReq = 3000158
+message SSGetAllServiceReq {
+}
+
+// 获取 relaysvr 注册的所有服务 ECV_SSGetAllServiceRes = 3000159
+message SSGetAllServiceRes {
+    repeated uint64 ConnIdxList = 1;
+}
+
+// 踢所有人下线通知 ECV_SSKickOffAllNotify = 3100009
+message SSKickOffAllNotify {
+}
+
+// GM 命令广播通知 ECV_SSGMCommandNotify = 3100010
+message SSGMCommandNotify {
+    string Message = 1;
+}
+
+// 封号通知 ECV_SSForbidAccountNotify = 3000148
+message SSForbidAccountNotify {
+}

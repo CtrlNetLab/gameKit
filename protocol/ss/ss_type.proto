@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/ss;ss";
+package ss;
+
+enum ServiceType {
+    Init      = 0;
+    GameSvr   = 1;
+    RelaySvr  = 2;
+    MatchSvr  = 3;
+    RoomSvr   = 4;
+    GlobalSvr = 5;
+    MiscSvr   = 6;
+    GlobalRoomSvr = 8;
+
+    MaxType  = 255;
+}
+
+enum EnmLocation {
+    EL_None = 0;
+    // 非洲
+    EL_AF = 1;
+    // 欧洲
+    EL_EU = 2;
+    // 亚洲
+    EL_AS = 3;
+    // 北美
+    EL_NA = 4;
+    // 南美
+    EL_SA = 5;
+    // 大洋洲
+    EL_OC = 6;
+    // 南极洲
+    EL_AN = 7;
+}
+
+enum EnmOperState {
+    EOS_Idle = 0;
+    // 战斗中
+    EOS_Stage = 1;
+}
+
+enum EnmMsgFlag {
+    EMF_Init = 0;
+    // 直接透传到客户端
+    EMF_ToClient   = 1;
+    // 消息来自客户端
+    EMF_FromClient = 2;
+    // 广播给所有 gamesvr
+    EMF_ToAllGameSvr   = 3;
+}
+
+enum EnmPlayerEvent {
+    EPE_Init = 0;
+    EPE_Disconnect = 1;
+    EPE_LogoutTimeOut = 2;
+    EPE_ReLogin = 3;
+}
+
+enum EnmTokenReason {
+    ETR_Token_Init = 0;
+}

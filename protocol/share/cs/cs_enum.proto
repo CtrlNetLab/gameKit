@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+// 协议位标压缩类型(cs_head.proto bitmark 高四位)
+enum EnmCompressType {
+    ENM_COMPRESS_TYPE_NONE = 0;
+    ENM_COMPRESS_TYPE_ZLIB = 2;
+    ENM_COMPRESS_TYPE_LZ4 = 3;
+    ENM_COMPRESS_TYPE_ZSTD = 4;
+}
+
+// 协议位标加密类型(cs_head.proto bitmark 低四位)
+enum EnmEncryptType {
+    // 不加密
+    ENM_ENCRYPT_TYPE_NONE = 0;
+
+    // XXTEA 加密算法
+    ENM_ENCRYPT_TYPE_XXTEA = 1;
+}
+
+enum EnmChatType {
+    //大厅
+    Normal = 0;
+    // 战斗
+    Battle = 1;
+
+    GM = 9999;
+}
+
+// 临时属性
+enum EnmAttr {
+    EAttr_Init = 0;
+    // 最大值
+    EAttr_Max = 33;
+}
+
+// 属性类型(示例值, 业务按需追加, 接续编号)
+enum EnmAttrType {
+    EAT_None = 0;
+    // 血量上限
+    EAT_MaxHp = 10000;
+    // 血量
+    EAT_Hp = 10001;
+    // 攻击力
+    EAT_Atk = 10005;
+    // 防御力
+    EAT_Def = 10006;
+}

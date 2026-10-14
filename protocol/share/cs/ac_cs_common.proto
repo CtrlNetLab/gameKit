@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+import "database/ac_account.proto";
+import "google/protobuf/any.proto";
+
+// 登陆响应(框架最小示例)
+// 约定: 业务模块消息放 ac_cs_<模块>.proto, 命令字在 cs_cmdvalue.proto 注册
+message AccountResponse {
+
+    /**
+     * 账号UUID【唯一】
+     */
+    string accountId = 1;
+
+    /**
+     * 8位账号id
+     */
+    string sid = 2;
+
+    /**
+     * token
+     */
+    string token = 3;
+
+    /**
+     * 登录信息
+     */
+    database.LoginInfo loginInfo = 4;
+
+    /**
+     * 第三方平台pojo
+     */
+    repeated database.PlatformUser platformUserList = 5;
+
+    /**
+     * 是否为首次登录
+     */
+    bool firstLogin = 6;
+
+    /**
+     * 基础数据
+     */
+    database.BasicInfo basicInfo = 7;
+
+    /**
+     * 服务器时间, 单位: 毫秒
+     */
+    int64 serverTime = 8;
+}
+
+// 数据块扩展(chunk 机制): 大对象分块下发, @see CHUNK_OPERATION_ / CHUNK_TYPE_
+message Extend {
+    string id = 1;
+    // @see CHUNK_OPERATION_
+    int32 chunk = 2;
+    // @see CHUNK_TYPE_
+    int32 op = 3;
+
+    repeated google.protobuf.Any Repeat = 5;
+}
+
+// 聊天频道 @see cs_chat.proto
+enum EnmChatChannel {
+    InitChannel = 0;
+    // 好友私聊
+    FriendChannel = 1;
+    // 世界频道
+    WorldChannel = 2;
+}

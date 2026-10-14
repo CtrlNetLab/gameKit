@@ -1,0 +1,35 @@
+Network:
+  # GameSvr 配置, 压测机器人连接的游戏服地址
+  GameSvr: ["{{ dist_user.Roles.gamesvr.Host | default(Roles.gamesvr.Host, true) }}:{{ dist_user.Roles.gamesvr.Port | default(Roles.gamesvr.Port, true) }}"]
+  # 协议 tcp or ws or wss
+  Proto: ws
+
+Control:
+  # 用于监听 UDP 控制指令, 这个端口只能通过防火墙指定 ip 来访问
+  Service: "127.0.0.1:{{ dist_user.Roles.benchmark.CtrlPort | default(Roles.benchmark.CtrlPort, true) }}"
+  # 加密密钥
+  ScrtKey: "9WepkO@WlcYex&wW"
+
+Common:
+  # 压测方式, Login: 登录压测(登录成功后只发心跳, 业务模块压测在此结构上扩展)
+  BenchType: "Login"
+  # 此压测脚本保持的最高同时在线
+  KeepOnline: 600
+  # 是否要开启加密, false: 不开启; true: 开启
+  XXTeaOpen: false
+  # 密钥
+  XXTeaKey: "AA9zg1CZMnYLpA5H"
+  # 服务正式上线的时间
+  StartService: "2023-01-01"
+  # 服务 id, 同一类型的服务 id 不能一样, 否则启动会失败
+  ServiceId: {{ dist_user.Roles.benchmark.ServiceId | default(Roles.benchmark.ServiceId, true) }}
+  NetLog: false
+  # websocket 连接超时时间
+  DialerTimeout: 3s
+  # websocket 握手超时时间
+  HandshakeTimeout: 10s
+
+Login:
+  # 每秒登录的数量
+  QPS: 30
+  StartUserIdx: 1

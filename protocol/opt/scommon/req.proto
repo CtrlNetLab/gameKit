@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+
+import "scommon/global.proto" ;
+import "scommon/push_notify.proto" ;
+import "scommon/ban.proto" ;
+
+/** 请求ID */
+enum ReqId {
+    NO_REQ_ID = 0 ;
+    OptConfigChange = 1; //运营平台配置发生了改变
+    CheckGameEnvValid = 5 ; //检查环境是否有效
+    NotifyMaintenanceInfo = 6 ;//通知维护信息
+    QueryOnlineServer = 7 ;//查询在线服务器列表
+    CheckHealthy = 8 ;//健康检查
+    QueryPlayerAccount = 20 ; //查询玩家账号
+    ImportPlayerAccount = 21 ;//导入玩家账号
+    SendMail = 50 ;//发送邮件
+    SendPushNotify = 55 ;//发送推送公告
+    ShuShuPush = 60 ;//数数推送
+    BanAccountNotify = 61 ;//封号推送
+
+    USE_SHARE_KEY = 80 ; //使用分享码
+}
+
+//运营平台配置发生了改变
+message ReqOptConfigChange {
+    message Req {
+        BusinessMod businessMod  = 1 ; //具体是哪个业务模块发生配置
+    }
+    message Resp {
+    }
+}
+
+//发送邮件
+message ReqSendMail {
+    message Req {
+        int32 id = 1 ;
+        string name = 2 ;
+        bool playerGroupExclude = 4 ; //是否排除该群组
+        ReceivePlayerType playerType = 5 ;//玩家类型
+        int32 playerGroupId = 6 ;//玩家群组
+        StrLangs title = 7 ;//标题
+        StrLangs content = 8; //正文
+        PlayerGroupCond playerGroupCond = 9 ; //玩家群组条件(20250911更新,支持多个群组)
+        repeated Award rewardList = 10 ; //奖励列表
+        repeated string playerIds = 15 ; //指定的玩家列表 （注意，AC该值为nil）
+        int64 expireTime = 16 ; //过期时间
+    }
+    message Resp {
+        repeated string successPlayerIds = 1 ;//返回成功的玩家id列表
+    }
+}
+
+message ReqCheckHealthy {
+    message Req {
+        string checkId = 1 ;//检查ID
+    }
+    message Resp {
+        string serverId = 1 ; //上报的服务器ID
+    }
+}
+
+
+//检查环境是否有效
+message ReqCheckGameEnvValid {
+    message Req {
+    }
+    message Resp {
+    }
+}
+
+//通知维护信息
+message ReqNotifyMaintenanceInfo {
+    message Req {
+        bool isInMaintenance = 1 ;//是否在维护中
+        int64 recoveryTime = 2 ;//恢复时间
+    }
+    message Resp {
+    }
+}
+
+//查询玩家账号
+message ReqQueryPlayerAccount {
+    message Req {
+        string playerId = 1; //玩家ID
+    }
+    message Resp {
+        string accountDetail = 1 ;//账号详情
+        string serverId = 2; //玩家所在的服务器id
+        bool online = 3; // 玩家是否在线
+    }
+}
+
+//导入玩家账号
+message ReqImportPlayerAccount {
+    message Req {
+        string accountDetail = 1 ;//账号详情
+        string playerId = 2 ; //导入到哪个账号上
+    }
+    message Resp {
+    }
+}
+
+//查询在线服务器列表
+message ReqQueryOnlineServer {
+    message Req {
+        string accountDetail = 1 ;//账号详情
+        string playerId = 2 ; //导入到哪个账号上
+    }
+    message Resp {
+        repeated ServerInfo serverList = 1 ;//在线的服务器列表
+    }
+    message ServerInfo {
+        string id = 1 ;//服务器id
+        int32 onlinePlayerCount = 2; //在线玩家数量
+    }
+}
+
+// 发送推送公告
+message ReqSendPushNotify {
+    message Req {
+        PushNotify pushNotify = 1 ;
+    }
+    message Resp {
+    }
+}
+
+// 发送推送公告
+message ReqShuShuPush {
+    message Req {
+        string pushGiftId = 1; //推送礼包id
+        repeated string refPlayerIds = 2; //关联的相关玩家Id(备用，暂时可能不用)
+    }
+    message Resp {
+    }
+}
+
+// 封号推送
+message ReqBanAccountNotify {
+    message Req {
+        int32 operateId = 1 ;//操作ID (弃用)
+        BanOperateType operateType = 2 ; //操作类型
+        repeated BanUser userList = 3 ; //相关用户列表
+        string operateVersion = 4 ; //操作版本
+    }
+    message Resp {
+    }
+}
+
+// 使用分享码
+message ReqUseShareKey {
+    message Req {
+        string shareKey = 1;
+    }
+    message Resp {
+
+    }
+}

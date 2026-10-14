@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+// 客户端协议命令字枚举
+// 新增协议时在此注册 ECV_CS*Req / ECV_CS*Res，并在对应 ac_cs_*.proto / cs_*.proto 中定义消息体
+enum EnmCmdValue
+{
+  ECV_Init = 0;
+
+  // 登陆
+  ECV_CSLoginReq = 1001;
+  ECV_CSLoginRes = 1002;
+
+  // 心跳包
+  ECV_CSHeartReq = 1003;
+  ECV_CSHeartRes = 1004;
+
+  // 聊天协议，用于 GM
+  ECV_CSChatReq = 1010;
+  ECV_CSChatRes = 1011;
+
+  // 把玩家踢下线
+  ECV_CSKickOffNotify = 1012;
+  ECV_CSKickOffNotify1 = 55555;
+  ECV_CSKickOffNotify2 = 66666;
+  ECV_CSKickOffNotify3 = 77777;
+  ECV_CSKickOffNotify4 = 88888;
+
+  // 通用的空消息
+  ECV_CSCommonNoneReq = 1028;
+  ECV_CSCommonNoneRes = 1029;
+
+  // 服务器滚动更新重连通知
+  ECV_CSServerRollingUpdateNotify = 1040;
+
+  // 游戏服状态通知
+  ECV_CSGameSvrStateNotity = 1436;
+
+  // 客户端埋点上报
+  ECV_CSClientDotReq = 1440;
+  ECV_CSClientDotRes = 1441;
+
+  // 登陆(业务登陆, 示例: LoginApp)
+  ECV_CS_AC_LoginReq = 10002;
+  ECV_CS_AC_LoginRes = 50002;
+
+  // 房间透传边界: 大于该值的客户端命令由 gamesvr 直接转发 roomsvr 处理
+  ECV_CSTransRoomReq = 1000000;
+}

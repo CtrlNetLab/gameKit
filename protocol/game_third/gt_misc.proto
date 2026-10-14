@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/game_third;game_third";
+package game_third;
+
+// misc 相关协议 ECV_SSMiscReq = 100022;
+message SSMiscReq {
+    // 玩家列表, 一次最多支持 1024 个用户操作 
+    repeated uint64 AccList = 1;
+    // 广播给指定的所有服务 @see ServiceType 
+    // int32 Broadcast = 2;
+    // message 名字
+    string MsgName  = 3;
+    string MsgData  = 4;
+    /**
+     * case-1: len(AccList) > 0, ServiceType = 0 or GameSvr，消息透传给 AccList 所在的 gamesvr
+     * case-2: ServiceType < MaxType 广播给对应的 server
+     * case-3: ServiceType = ServiceConnIdx 消息转发给对应的 server
+     */
+    uint64 ServiceType = 5;
+}
+
+// misc 相关协议 ECV_SSMiscRes = 100023;
+message SSMiscRes {
+    // message 名字 
+    string MsgName = 1;
+    repeated SSOneMiscRes MiscResList = 2;
+}
+
+message SSOneMiscRes {
+    int32 Code     = 1;
+    // 发给玩家，则 AccId > 0
+    uint64 AccId   = 3;
+    uint64 ConnIdx = 4;
+    string MsgData = 5;
+}
+
+message SPGetPlayerDataReq {
+}
+
+message SPGetPlayerDataRes {
+    string Name = 1;
+}
+
+message SPTestServiceReq {
+    string TestData = 1;
+}
+
+message SPTestServiceRes {
+    string TestData = 1;
+}
+

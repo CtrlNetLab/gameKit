@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+// 聊天消息请求 ECV_CSChatReq = 1007
+message CSChatReq {
+    // @see EnmChatType 聊天类型 
+    int32 Type = 1;
+    string Message = 2;
+    // @see EnmChatChannel 聊天频道
+    uint32 Channel = 3;
+}
+
+// 聊天消息响应 ECV_CSChatRes = 1008;
+message CSChatRes {
+    // @see EnmChatType 聊天类型 
+    int32 Type = 1;
+    string Result = 2;
+    // @see EnmChatChannel 聊天频道
+    uint32 Channel = 3;
+}
+
+// 聊天通知 ECV_CSChatMsgNotify = 10277;
+message CSChatMsgNotify {
+    // 发送者id
+    uint64 Sender = 1;
+    // @see EnmChatType 聊天类型 
+    int32 Type = 2;
+    // @see EnmChatChannel 聊天频道
+    uint32 Channel = 3;
+    // 给某个玩家发消息时用
+    uint64 Receiver = 4;
+    string Message = 5;
+    // 相对时间
+    uint32 Time = 6;
+}
+
+// 通用ui的系统通知（目前投票时有用到） ECV_CSSystemNotify = 10289
+message CSSystemNotify {
+    // 文本ID
+    uint32 MsgID = 1;
+    // 需要填充的参数 统一给string
+    repeated string Param = 2;
+    // 相对时间
+    uint32 Time = 3;
+}
+

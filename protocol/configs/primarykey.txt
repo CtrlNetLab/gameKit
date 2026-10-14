@@ -1,0 +1,8 @@
+## 配置表文件名:索引表达式:索引类型
+## excel文件名:sheet名字:索引表达式:索引类型
+## 索引表达式可以用多个字段计算，表达式将直接替换 ResMgr.go.tmpl {{PrimaryKey}}
+## 只要是合法的 golang 语法即可, 例如: fmt.Sprintf("%d",item.PlayerLevel <<16|item.RealDrop)
+## 或者 item.PlayerLevel<<16|item.RealDrop
+## 示例(脚手架内置):
+ConfigInitArgsConfig:item.Name:string
+WordsConfig:item.Id:int32

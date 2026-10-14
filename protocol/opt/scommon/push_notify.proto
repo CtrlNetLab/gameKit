@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option go_package = "__GO_OPTS__";
+package optscommon;
+import "scommon/global.proto" ;
+
+
+
+//普通活动配置项配置
+message PushNotify {
+  int32 id = 1 ; //id
+  string name = 2 ; // 推送名
+
+  PlayerGroupCond playerGroupCond = 4 ; //玩家群组条件(20250911更新,支持多个群组)
+  ReceivePlayerType playerType = 5 ;//玩家类型
+  int32 playerGroupId = 6; //玩家群组id
+//  repeated string playerIds = 7; //玩家id列表
+  map<string, bool> playerIdMap = 7; //玩家id Map
+  bool playerGroupExclude = 8 ; //是否排除该群组
+  int64 expireTime = 20 ;//失效时间
+  StrLangs content = 21; //内容
+  ShowType showType = 22 ; //展示类型
+  repeated int64 appointTimes = 23; //预约时间列表
+  int32 showCount = 24 ; //展示次数
+}
+
+
+// 展示形式类型
+enum ShowType {
+  NO_SHOW_TYPE = 0 ;
+  TOP_WINDOW = 1 ;//顶级窗口
+  MARQUEE = 2 ; //跑马灯
+}

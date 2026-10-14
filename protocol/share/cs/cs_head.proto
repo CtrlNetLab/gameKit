@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+import "cs/ac_cs_common.proto";
+
+/**
+ * 协议格式
+ * |length|bitmark|head-length|message-buffer|
+ *
+ * length: 4-Bytes，表示接下来数据长度(不包括 length), 
+ *         length = len(bitmark) + len(head-length) + len(message-buffer)
+ *                = 2 + len(message-buffer)
+ *
+ * bitmark: 1-Byte，低四位表示加密类型，0: 不加密; 高四位表示压缩类型，0: 不压缩
+ *
+ * head-length: 1-Byte 表示 CSHead 序列化之后的长度，解析函数一般都要求有长度参数
+ *
+ * message-buffer: 生成方式如下 
+ *     step-1. message-buffer = CSHead.Serialize + RequestMessage.Serialize
+ *     step-2. if (((bitmark >> 4) & 0xf) == LZ4) message-buffer = LZ4(message-buffer)
+ *     step-3. if ((bitmark & 0x0f) == XXTEA) message-buffer = XXTEA(message-buffer)
+ */
+
+/**
+ * AC client 协议格式
+ * |length|bitmark|message-buffer
+ *
+ * length: 4-Bytes，表示接下来数据长度(不包括 length), 
+ *         length = len(bitmark) + len(head-length) + len(message-buffer)
+ *                = 2 + len(message-buffer)
+ *
+ * bitmark: 1-Byte，低四位表示加密类型，0: 不加密; 高四位表示压缩类型，0: 不压缩
+ * head-length: 1-Byte 表示 CSHead 序列化之后的长度，解析函数一般都要求有长度参数
+ *
+ * message-buffer: 生成方式如下 
+ *     step-1. message-buffer = CSHead.JsonString + RequestMessage.JsonString
+ *     step-2. if (((bitmark >> 4) & 0xf) == zstd) message-buffer = zstd(message-buffer)
+ *     step-3. if ((bitmark & 0x0f) == XXTEA) message-buffer = XXTEA(message-buffer)
+ */
+
+message CSHead {
+    uint32 cmdId   = 1;
+    uint32 seqId   = 2;
+    uint32 retCode = 3;
+
+    // 发送的时间戳，单位：微秒，发送的时候赋值，使用字符串, 例如：2021-08-24 10:00:00.123456
+    string sendTm  = 4;
+    // CmdId 用字符串传 
+    string strCmdId = 5;
+
+    // @NOTE: 服务器自动填写不需要客户端填 
+    uint64 roomId = 6;
+    //目前用于错误码下发的动态ID.如10303错误码下发4000001表示该资源不足.
+    string retMessage = 7;
+    // 通知类型消息SeqId，服务器通知类型消息填充非零值
+    // 确认收取时返回原值给服务器
+    uint32 NotifySeqId = 8;
+}
+
+message CS_AC_TemplateRes {
+    int32 code = 1;
+    /***
+     * @NOTE: data 由对应的 message 序列化成 json
+     * e.g: CS_AC_EditRoleBasicInfoRes 响应，则 data = json(EditRoleBasicInfo)
+     * e.g: CS_AC_LoginRes 响应，则: data = json(AccountResponse)
+     */
+    string data = 2;
+    // 有变化的属性
+    repeated cs.Extend extend = 3 [json_name = "extend"];
+}
+

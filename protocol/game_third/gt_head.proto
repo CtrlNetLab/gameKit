@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/game_third;game_third";
+package game_third;
+
+/**
+ * 协议格式
+ * |length|bitmark|head-length|message-buffer|
+ *
+ * length: 4-Bytes，表示接下来数据长度(不包括 length), 
+ *         length = len(bitmark) + len(head-length) + len(message-buffer)
+ *                = 2 + len(message-buffer)
+ *
+ * bitmark: 1-Byte，低四位表示加密类型，0: 不加密; 高四位表示压缩类型，0: 不压缩
+ *
+ * head-length: 1-Byte 表示 CSHead 序列化之后的长度，解析函数一般都要求有长度参数
+ *
+ * message-buffer: 生成方式如下 
+ *     step-1. message-buffer = CSHead.Serialize + RequestMessage.Serialize
+ *     step-2. if (((bitmark >> 4) & 0xf) == LZ4) message-buffer = LZ4(message-buffer)
+ *     step-3. if ((bitmark & 0x0f) == XXTEA) message-buffer = XXTEA(message-buffer)
+*/
+
+// @NOTE: misc 协议只需要填写 CmdId = 300022 就可以了 
+message SSHead {
+	uint32 CmdId   = 1;
+
+	uint32 SeqId  = 2;
+	uint32 RetCode = 3;
+
+	// 消息来源/目的，Src/Dst = (Type << 32) | ID
+	uint64 Src = 4;
+	uint64 Dst = 5;
+
+	// 1: 外部协议，非内部 service 服务; 0: 内部协议 
+	int32 External = 6;
+
+	uint64 AccId = 7;
+
+	// 转发协议时才填充
+	uint32 SubCmdId = 8;
+
+    // 透传标识 
+    uint32 Flag = 9;
+}
+

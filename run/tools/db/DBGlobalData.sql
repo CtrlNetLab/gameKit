@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS `DBGlobalData` (
+	`Id` int unsigned NOT NULL ,
+	`GlobalData` MEDIUMBLOB,
+	PRIMARY KEY(`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

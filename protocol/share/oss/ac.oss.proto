@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/oss;oss";
+package oss;
+
+// 特别说明：protocol/oss 的 pb 文件，在埋点上报的 pb 名称与埋点事件保持一致，复制埋点事件名即可（命名仅限该文件）
+
+// ELK告警枚举(框架告警 + 示例; 业务告警类型在此追加, 接续未使用编号)
+enum EnmElk {
+    Init = 0;
+    // panic Err
+    Panic_Err = 1; //宕机
+    Platform = 4; //平台
+    Network_Error = 6; //网络错误
+    PackPlayerData_Failed = 7; //打包玩家数据失败
+    OptPlatform_Configuration_Error = 8; //运营平台商城配置错误
+    Local_Conifg_file = 10; // 本地配置文件错误（策划配置表）
+}
+
+// Alarm
+message ElkAlarm {
+    // 日志名字, 实际 message 的名字
+    string Type = 1;
+    // 游戏Id
+    string GameId = 2;
+    // 时间格式 Y-m-d H:M:S, e.g: 2021-11-12 11:00:00
+    string Time = 3;
+    // 告警枚举
+    string EnmElk = 4;
+    // 玩家账户Id
+    uint64 AccId = 5;
+    // 告警信息
+    bytes Msg = 6;
+}
+
+// 埋点（事件）通用头部
+message OSSCommon {
+    // 事件埋点 (必填)
+    optional string event = 1;
+    // 操作OpId
+    optional string opId = 2;
+    // 操作时间（时间戳）
+    optional int64 opTime = 3;
+    // 平台 1=IOS，2=Android
+    optional string platform = 4;
+    // 服务器，亚服、美服、欧服等
+    optional string serverRegion = 5;
+    // 游戏ID
+    optional string gameId = 6;
+    // 角色名称
+    optional string roleName = 7;
+    // 角色创建时间（时间戳）
+    optional int64 createTime = 8;
+    // 用户account_id（数数中唯一且非空），对应玩家的唯一ID (必填)
+    optional string account_id = 9;
+    // 访客distinct_id（数数中唯一且非空），由客户端SDK生成上报 (必填)
+    optional string distinct_id = 10;
+}
+
+// 玩家实时埋点数据(user_set)，示例埋点，可按需增删
+message user_set {
+    // 最后登录时间
+    optional int64 lastLoginTime = 7;
+    // 设备系统 如iOS，android，鸿蒙等
+    string deviceOS = 10;
+    // ios16 等
+    string osVersion = 11;
+    // iphone 15, iPad 等
+    string deviceModel = 12;
+    // 设备id
+    string deviceId = 13;
+    // ip 地址
+    string ip = 14;
+    // 网络类型。 wifi，5g等
+    string network = 15;
+    // 累计登录天数
+    optional int32 totalLoginDay = 17;
+    // 日志通用头部
+    OSSCommon OSSCommon = 32;
+}

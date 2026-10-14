@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+option go_package = "gamekit/pkg/cs;cs";
+package cs;
+
+import "cs/cs_common.proto";
+import "cs/cs_type.proto";
+
+// 登陆请求协议 ECV_CSLoginReq = 1001
+message CSLoginReq {
+    string UserId   = 1;
+    string Token    = 2;
+    string PlatType = 3;
+    // 是否是重登陆 
+    bool ReLogin    = 4;
+    string Lang     = 5;
+    // 客户端版本
+    string ClientVer = 6;
+    // 客户端系统
+    string ClientOS = 7;
+    // 客户端设备码
+    string ClientDevice = 8;
+    // 服务器用, 客户端忽略
+    int64 ForbidTime = 9;
+    // 服务器用, 客户端忽略
+    uint32 IpLimitStatus = 10;
+    // 来源
+    string Source = 11;
+    string Mail = 12;
+    // 客户端类型 	// 0 国际 1 合规服
+    uint32 ClientType = 13;
+}
+
+// 登陆响应 ECV_CSLoginRes = 1002
+message CSLoginRes {
+    // @see EnmLoginCode
+    // ELC_SUCCESS: 登陆成功; 
+    // 其他值表示登陆失败, 具体提示可通过提示语表进行提示 
+    uint32 RetCode = 1;
+    // 非 ELC_SUCCESS 这个字段没有 
+    cs.CSPlayerData PlayerData = 2;
+    // 服务器时间 
+    int64 ServerTime = 3;
+    // true: 重复登录时服务器还在线; false: 重复登录时服务器已经不在线了 
+    bool IsDupLogin = 4;
+    // 游戏状态 
+    // EnmGameState GameState = 4;
+    // GameState == EGState_Battle
+    // RoomData RoomData = 5;
+
+    // 是否在大厅，false: 需要从 RoomDataList 获取匹配/战斗数据，并进入对应的场景 
+    // bool IsLobby = 8;
+    EnmGameState GameState = 7;
+
+    // 封禁到期时间
+    int64 ForbidTime = 10;
+    // 默认0 可以登录，1，当前阶段无法登录
+    uint32 GameSvrState = 11;
+    // 可以登录时间点
+    int64 GameOpenTm = 12;
+    // 当前关闭的功能列表
+    repeated uint32 ClosedSwtich = 13;
+
+    // 是否开启邀请分享功能
+    bool OpenInviteShare = 14;
+    // 是否发送邀请活动
+    bool SendInviteAct = 15;
+    // 邀请活动按钮消失时间
+    int64 InviteActEndTime = 16;
+
+    // 胶囊弹窗状态
+    uint32 CapsulePopupStatus = 17;
+    // 数据版本
+    uint32 DataVersion = 18;
+    // 代码版本
+    uint32 CodeVersion = 19;
+}
+
+// 心跳包请求 ECV_CSHeartReq = 1005
+message CSHeartReq {
+}
+
+// 心跳包响应 ECV_CSHeartRes = 1006
+message CSHeartRes {
+    // 服务器时间，单位：毫秒 
+    int64 ServerTime = 1;
+}
+
+// 提玩家下线通知 ECV_CSKickOffNotify = 1009;
+message CSKickOffNotify {
+    // @see EnmKickOffReason 踢玩家下线的原因
+    //作弊情况下恢复登陆的时间戳
+    int64 RecoverTime = 1;
+}
+
+// 通用的空消息 ECV_CSCommonNoneReq = 10286;
+message CSCommonNoneReq {
+}
+
+// 通用的空消息 ECV_CSCommonNoneRes = 10287;
+message CSCommonNoneRes {
+}
+
+// ECV_CSClientDotReq
+message CSClientDotReq {
+    // 事件Id
+    int32 EventId = 1;
+    // 事件名称
+    string EventName = 2;
+    // 属性Id
+    int32 AttrId = 3;
+    // 属性值
+    string AttrValue = 4;
+}
+
+message CSClientDotRes {
+}
+
+// ECV_CSGameSvrStateNotity
+message CSGameSvrStateNotity {
+    // 默认0 可以登录，1，当前阶段无法登录
+    uint32 GameSvrState = 1;
+    int64 GameOpenTm = 2;
+}
+
+//ECV_CSServerRollingUpdateNotify 滚动更新。
+message CSServerRollingUpdateNotify{
+
+}
+message CSKickOffNotify1 {
+    // @see EnmKickOffReason 踢玩家下线的原因 
+}
+message CSKickOffNotify2 {
+    // @see EnmKickOffReason 踢玩家下线的原因 
+}
+message CSKickOffNotify3 {
+    // @see EnmKickOffReason 踢玩家下线的原因 
+}
+message CSKickOffNotify4 {
+    // @see EnmKickOffReason 踢玩家下线的原因 
+}
+
